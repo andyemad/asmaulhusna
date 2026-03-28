@@ -1,101 +1,125 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import ProgressRing from "@/components/ProgressRing";
+import NameOfTheDay from "@/components/NameOfTheDay";
+import ShareCard from "@/components/ShareCard";
+import MilestoneModal from "@/components/MilestoneModal";
+import {
+  loadProgress,
+  getMemorizedCount,
+  getAccuracy,
+} from "@/lib/progress";
+import { getDueNames } from "@/lib/spaced-repetition";
+import { shareText } from "@/lib/share";
+import { checkMilestones, Milestone } from "@/lib/milestones";
+import { UserProgress } from "@/lib/types";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [progress, setProgress] = useState<UserProgress | null>(null);
+  const [milestone, setMilestone] = useState<Milestone | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  useEffect(() => {
+    const p = loadProgress();
+    setProgress(p);
+    const m = checkMilestones(p);
+    if (m) setMilestone(m);
+  }, []);
+
+  const memorized = progress ? getMemorizedCount(progress) : 0;
+  const dueToday = progress ? getDueNames(progress.names).length : 0;
+  const accuracy = progress ? getAccuracy(progress) : 0;
+  const streak = progress?.streak.current ?? 0;
+
+  return (
+    <div className="relative flex flex-col items-center px-6 pt-12">
+      {/* Share button */}
+      <div className="absolute top-12 right-6">
+        <ShareCard memorized={memorized} streak={streak} />
+      </div>
+
+      {/* Title */}
+      <p className="text-text-muted text-[11px] tracking-[4px] uppercase">
+        Asma ul Husna
+      </p>
+      <h1 className="font-arabic text-4xl mt-2">أسماء الله الحسنى</h1>
+      <p className="text-text-secondary text-sm mt-1">
+        The 99 Beautiful Names of Allah
+      </p>
+
+      {/* Progress Ring */}
+      <div className="mt-8">
+        <ProgressRing value={memorized} max={99} />
+      </div>
+
+      {/* Name of the Day */}
+      <div className="w-full mt-8">
+        <NameOfTheDay />
+      </div>
+
+      {/* CTAs */}
+      <div className="flex gap-3 mt-8 w-full">
+        <Link
+          href="/flashcards"
+          className="flex-1 bg-accent text-white text-center py-3 rounded-xl font-semibold text-sm"
+        >
+          ▶ Continue Learning
+        </Link>
+        <Link
+          href="/browse"
+          className="flex-1 bg-surface border border-white/10 text-white text-center py-3 rounded-xl text-sm"
+        >
+          📖 Browse All
+        </Link>
+      </div>
+
+      {/* Stats Row */}
+      <div className="flex gap-6 mt-8 mb-4">
+        <div className="text-center">
+          <p className="text-lg font-bold text-accent">{streak}</p>
+          <p className="text-[10px] text-text-muted tracking-wider">
+            DAY STREAK
+          </p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="w-px bg-white/10" />
+        <div className="text-center">
+          <p className="text-lg font-bold text-accent">{dueToday}</p>
+          <p className="text-[10px] text-text-muted tracking-wider">
+            DUE TODAY
+          </p>
+        </div>
+        <div className="w-px bg-white/10" />
+        <div className="text-center">
+          <p className="text-lg font-bold text-accent">{accuracy}%</p>
+          <p className="text-[10px] text-text-muted tracking-wider">
+            ACCURACY
+          </p>
+        </div>
+      </div>
+
+      {/* Challenge a Friend */}
+      <button
+        onClick={() =>
+          shareText(
+            `Can you memorize all 99 Names of Allah? I'm on day ${streak}!`,
+            "https://asma-ul-husna.vercel.app"
+          )
+        }
+        className="w-full bg-surface border border-white/10 text-text-secondary py-3 rounded-xl text-sm mb-8"
+      >
+        🤝 Challenge a Friend
+      </button>
+
+      {/* Milestone Modal */}
+      {milestone && (
+        <MilestoneModal
+          milestone={milestone}
+          memorized={memorized}
+          streak={streak}
+          onClose={() => setMilestone(null)}
+        />
+      )}
     </div>
   );
 }
