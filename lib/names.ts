@@ -1,5 +1,6 @@
 import namesData from "@/data/names.json";
 import { Name } from "./types";
+import { getLocalDayOfYear } from "./date";
 
 export const names: Name[] = namesData as Name[];
 
@@ -7,21 +8,35 @@ export function getNameById(id: number): Name | undefined {
   return names.find((n) => n.id === id);
 }
 
-export function getNameOfTheDay(): Name {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = now.getTime() - start.getTime();
-  const dayOfYear = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const index = dayOfYear % 99;
-  return names[index];
+export function getNameOfTheDay(date = new Date()): Name {
+  const dayOfYear = getLocalDayOfYear(date);
+  const index = (dayOfYear - 1 + names.length) % names.length;
+  return names[index] ?? names[0];
+}
+
+function normalizeSearchValue(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/['’`-]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 export function searchNames(query: string): Name[] {
-  const q = query.toLowerCase().trim();
+  const q = normalizeSearchValue(query);
   if (!q) return names;
   return names.filter(
     (n) =>
-      n.transliteration.toLowerCase().includes(q) ||
-      n.meaning.toLowerCase().includes(q)
+      [
+        String(n.id),
+        n.transliteration,
+        n.meaning,
+        n.description,
+        n.arabic,
+      ]
+        .map(normalizeSearchValue)
+        .some((value) => value.includes(q))
   );
 }

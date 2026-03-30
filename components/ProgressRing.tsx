@@ -12,11 +12,12 @@ interface ProgressRingProps {
 export default function ProgressRing({
   value,
   max,
-  size = 120,
-  strokeWidth = 3,
+  size = 164,
+  strokeWidth = 8,
 }: ProgressRingProps) {
   const [animatedValue, setAnimatedValue] = useState(0);
-  const radius = (size - strokeWidth * 2) / 2;
+  const inset = strokeWidth / 2 + 8;
+  const radius = (size - inset * 2) / 2;
   const circumference = radius * 2 * Math.PI;
   const progress = max > 0 ? animatedValue / max : 0;
   const offset = circumference - progress * circumference;
@@ -27,14 +28,19 @@ export default function ProgressRing({
   }, [value]);
 
   return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <svg width={size} height={size} className="-rotate-90">
+    <div
+      className="relative"
+      style={{ width: size, height: size }}
+    >
+      <div className="absolute inset-0 rounded-full bg-white/[0.02] shadow-[0_24px_70px_rgba(0,0,0,0.24)]" />
+      <div className="absolute inset-[10px] rounded-full border border-white/8 bg-[rgba(20,26,44,0.92)]" />
+      <svg width={size} height={size} className="relative -rotate-90">
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgba(167,139,250,0.2)"
+          stroke="rgba(244,221,154,0.12)"
           strokeWidth={strokeWidth}
         />
         <circle
@@ -42,7 +48,7 @@ export default function ProgressRing({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="#a78bfa"
+          stroke="#d7b067"
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={offset}
@@ -51,8 +57,11 @@ export default function ProgressRing({
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-2xl font-bold text-white">{value}<span className="text-sm text-text-muted font-normal">/{max}</span></span>
-        <span className="text-[10px] text-text-muted tracking-wider">
+        <span className="font-display text-4xl font-bold leading-none text-white">
+          {value}
+          <span className="ml-1 text-sm font-normal text-text-muted">/{max}</span>
+        </span>
+        <span className="mt-2 text-[10px] tracking-[0.28em] text-text-muted">
           MEMORIZED
         </span>
       </div>

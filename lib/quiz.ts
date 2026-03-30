@@ -21,16 +21,22 @@ export function generateQuiz(
   count: number
 ): QuizQuestion[] {
   const encountered = allNames.filter((n) => encounteredIds.includes(n.id));
-  if (encountered.length < 4) return [];
+  if (encountered.length === 0) return [];
 
-  const selected = shuffle(encountered).slice(0, count);
+  const selected = shuffle(encountered).slice(
+    0,
+    Math.min(count, encountered.length)
+  );
 
   return selected.map((correctName) => {
     const type: QuizQuestion["type"] =
       Math.random() > 0.5 ? "arabic-to-meaning" : "meaning-to-arabic";
 
-    const pool = encountered.filter((n) => n.id !== correctName.id);
-    let distractors = shuffle(pool).slice(0, 3);
+    const preferredDistractors = shuffle(
+      encountered.filter((n) => n.id !== correctName.id)
+    ).slice(0, 3);
+
+    let distractors = preferredDistractors;
 
     if (distractors.length < 3) {
       const remaining = allNames.filter(

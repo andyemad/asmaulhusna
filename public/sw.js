@@ -1,10 +1,8 @@
 const CACHE_NAME = "asma-v1";
 const STATIC_ASSETS = [
-  "/",
-  "/flashcards",
-  "/quiz",
-  "/browse",
-  "/recitation",
+  "/manifest.json",
+  "/icons/icon-192.png",
+  "/icons/icon-512.png",
 ];
 
 self.addEventListener("install", (event) => {
@@ -32,6 +30,8 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  if (event.request.method !== "GET") return;
+
   const url = new URL(event.request.url);
 
   // Cache-on-play for audio files
@@ -53,11 +53,7 @@ self.addEventListener("fetch", (event) => {
 
   // Network-first for pages, cache-first for assets
   if (event.request.mode === "navigate") {
-    event.respondWith(
-      fetch(event.request).catch(() =>
-        caches.match(event.request)
-      )
-    );
+    event.respondWith(fetch(event.request));
   } else {
     event.respondWith(
       caches

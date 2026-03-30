@@ -10,6 +10,7 @@ interface SessionCompleteProps {
   newLearned: number;
   gotItCount: number;
   total: number;
+  onContinue: () => void;
 }
 
 export default function SessionComplete({
@@ -17,9 +18,16 @@ export default function SessionComplete({
   newLearned,
   gotItCount,
   total,
+  onContinue,
 }: SessionCompleteProps) {
   const [sharing, setSharing] = useState(false);
   const accuracy = total > 0 ? Math.round((gotItCount / total) * 100) : 0;
+  const message =
+    accuracy >= 85
+      ? "Strong session. Your review pace is really settling in."
+      : accuracy >= 60
+        ? "Solid progress. Another short pass will help lock the tougher names in."
+        : "Good effort. A focused review round will make the next session feel much easier.";
 
   const handleShare = async () => {
     setSharing(true);
@@ -33,50 +41,53 @@ export default function SessionComplete({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[60vh] px-6 text-center">
-      <p className="text-3xl mb-4">🎉</p>
-      <h2 className="text-xl font-bold text-white">Session Complete!</h2>
-      <p className="text-text-secondary mt-2">
-        You reviewed {reviewed} names and learned {newLearned} new ones.
-      </p>
+    <div className="px-6 py-10">
+      <div className="app-panel-strong rounded-[2rem] p-8 text-center">
+        <p className="section-kicker">Session complete</p>
+        <h2 className="mt-4 font-display text-4xl text-white">
+          Strong work today
+        </h2>
+        <p className="mt-3 text-base text-text-secondary">
+          You reviewed {reviewed} names and learned {newLearned} new ones.
+        </p>
+        <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-text-secondary">
+          {message}
+        </p>
 
-      <div className="flex gap-6 mt-6">
-        <div className="text-center">
-          <p className="text-lg font-bold text-accent">{accuracy}%</p>
-          <p className="text-[10px] text-text-muted tracking-wider">
-            ACCURACY
-          </p>
+        <div className="mt-8 grid grid-cols-2 gap-3">
+          <div className="stat-card">
+            <span className="stat-value">{accuracy}%</span>
+            <span className="stat-label">Accuracy</span>
+          </div>
+          <div className="stat-card">
+            <span className="stat-value">{total}</span>
+            <span className="stat-label">Total cards</span>
+          </div>
         </div>
-        <div className="w-px bg-white/10" />
-        <div className="text-center">
-          <p className="text-lg font-bold text-accent">{total}</p>
-          <p className="text-[10px] text-text-muted tracking-wider">
-            TOTAL CARDS
-          </p>
-        </div>
-      </div>
 
-      <button
-        onClick={handleShare}
-        disabled={sharing}
-        className="mt-5 bg-accent/15 text-accent px-6 py-2 rounded-full text-sm"
-      >
-        {sharing ? "Sharing..." : "📤 Share Progress"}
-      </button>
+        <button
+          onClick={handleShare}
+          disabled={sharing}
+          className="secondary-button mt-6 w-full"
+        >
+          {sharing ? "Preparing share card..." : "Share Progress"}
+        </button>
 
-      <div className="flex gap-3 mt-6 w-full">
+        <div className="mt-6 flex gap-3">
         <Link
           href="/"
-          className="flex-1 bg-surface border border-white/10 text-white text-center py-3 rounded-xl text-sm"
+          className="secondary-button flex-1"
         >
           Back to Home
         </Link>
-        <Link
-          href="/flashcards?bonus=1"
-          className="flex-1 bg-accent text-white text-center py-3 rounded-xl font-semibold text-sm"
+        <button
+          type="button"
+          onClick={onContinue}
+          className="primary-button flex-1"
         >
-          Keep Practicing
-        </Link>
+          Continue Learning
+        </button>
+        </div>
       </div>
     </div>
   );

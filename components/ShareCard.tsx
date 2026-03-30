@@ -27,10 +27,11 @@ export default function ShareCard({ memorized, streak }: ShareCardProps) {
     <button
       onClick={handleShare}
       disabled={sharing}
-      className="text-text-muted hover:text-accent transition-colors text-lg"
-      title="Share progress"
+      aria-label="Share your memorization progress"
+      title="Share your memorization progress"
+      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-secondary transition hover:border-accent/40 hover:text-accent"
     >
-      {sharing ? "..." : "📤"}
+      {sharing ? "Sharing" : "Share"}
     </button>
   );
 }

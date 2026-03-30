@@ -1,162 +1,286 @@
 "use client";
 
-import { useEffect, useState, useRef, useCallback } from "react";
-import { names } from "@/lib/names";
-import { RecitationTimestamp } from "@/lib/types";
-import timestampsData from "@/data/recitation-timestamps.json";
+import { useCallback, useEffect, useRef, useState } from "react";
 import NameCard from "@/components/NameCard";
+import { names } from "@/lib/names";
+import { getAudioPlayer } from "@/lib/audio";
 
-const timestamps: RecitationTimestamp[] =
-  timestampsData as RecitationTimestamp[];
+function PlayerIcon({
+  path,
+  className,
+}: {
+  path: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      className={className}
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d={path} />
+    </svg>
+  );
+}
 
 export default function RecitationPage() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const rafRef = useRef<number>(0);
+  const currentNameIndexRef = useRef(0);
+  const playingRef = useRef(false);
+  const repeatRef = useRef(false);
   const [playing, setPlaying] = useState(false);
   const [currentNameIndex, setCurrentNameIndex] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [repeat, setRepeat] = useState(false);
-  const repeatRef = useRef(false);
+  const [audioUnavailable, setAudioUnavailable] = useState(false);
 
   const currentName = names[currentNameIndex] || names[0];
+
+  useEffect(() => {
+    currentNameIndexRef.current = currentNameIndex;
+  }, [currentNameIndex]);
+
+  useEffect(() => {
+    playingRef.current = playing;
+  }, [playing]);
 
   useEffect(() => {
     repeatRef.current = repeat;
   }, [repeat]);
 
+  const loadTrack = useCallback(async (nextIndex: number, shouldAutoplay: boolean) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const clampedIndex = Math.min(Math.max(nextIndex, 0), names.length - 1);
+    const nextName = names[clampedIndex];
+
+    audio.pause();
+    audio.src = nextName.audioFile;
+    audio.currentTime = 0;
+    audio.load();
+
+    setCurrentNameIndex(clampedIndex);
+    setCurrentTime(0);
+    setDuration(0);
+    setAudioUnavailable(false);
+
+    if (!shouldAutoplay) {
+      setPlaying(false);
+      return;
+    }
+
+    try {
+      await audio.play();
+      setPlaying(true);
+    } catch {
+      setAudioUnavailable(true);
+      setPlaying(false);
+    }
+  }, []);
+
   useEffect(() => {
-    const audio = new Audio("/audio/recitation.mp3");
+    const audio = getAudioPlayer();
+    audio.pause();
+    audio.preload = "metadata";
     audioRef.current = audio;
 
-    audio.addEventListener("loadedmetadata", () =>
-      setDuration(audio.duration)
-    );
-    audio.addEventListener("ended", () => {
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+      setAudioUnavailable(false);
+    };
+
+    const handleEnded = () => {
+      if (currentNameIndexRef.current < names.length - 1) {
+        void loadTrack(currentNameIndexRef.current + 1, true);
+        return;
+      }
+
       if (repeatRef.current) {
-        audio.currentTime = 0;
-        audio.play();
+        void loadTrack(0, true);
       } else {
         setPlaying(false);
       }
-    });
+    };
+
+    const handleError = () => {
+      setAudioUnavailable(true);
+      setPlaying(false);
+    };
+
+    const handleTimeUpdate = () => {
+      setCurrentTime(audio.currentTime);
+    };
+
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener("ended", handleEnded);
+    audio.addEventListener("error", handleError);
+    audio.addEventListener("timeupdate", handleTimeUpdate);
+    void loadTrack(0, false);
 
     return () => {
       audio.pause();
-      audio.src = "";
-      cancelAnimationFrame(rafRef.current);
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("error", handleError);
+      audio.removeEventListener("timeupdate", handleTimeUpdate);
     };
-  }, []);
-
-  const syncLoop = useCallback(() => {
-    if (!audioRef.current) return;
-    const t = audioRef.current.currentTime;
-    setCurrentTime(t);
-
-    if (timestamps.length > 0) {
-      const idx = timestamps.findIndex(
-        (ts) => t >= ts.startTime - 0.2 && t < ts.endTime + 0.2
-      );
-      if (idx !== -1) setCurrentNameIndex(idx);
-    }
-
-    rafRef.current = requestAnimationFrame(syncLoop);
-  }, []);
+  }, [loadTrack]);
 
   const togglePlay = () => {
-    if (!audioRef.current) return;
+    if (!audioRef.current || audioUnavailable) return;
+
     if (playing) {
       audioRef.current.pause();
-      cancelAnimationFrame(rafRef.current);
       setPlaying(false);
-    } else {
-      audioRef.current.play().then(() => {
+      return;
+    }
+
+    audioRef.current
+      .play()
+      .then(() => {
         setPlaying(true);
-        rafRef.current = requestAnimationFrame(syncLoop);
-      });
-    }
+        setAudioUnavailable(false);
+      })
+      .catch(() => setAudioUnavailable(true));
   };
 
-  const skipPrev = () => {
-    const newIndex = Math.max(0, currentNameIndex - 1);
-    setCurrentNameIndex(newIndex);
-    if (timestamps[newIndex] && audioRef.current) {
-      audioRef.current.currentTime = timestamps[newIndex].startTime;
-    }
+  const jumpToIndex = (nextIndex: number) => {
+    void loadTrack(nextIndex, playingRef.current);
   };
 
-  const skipNext = () => {
-    const newIndex = Math.min(names.length - 1, currentNameIndex + 1);
-    setCurrentNameIndex(newIndex);
-    if (timestamps[newIndex] && audioRef.current) {
-      audioRef.current.currentTime = timestamps[newIndex].startTime;
-    }
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
   };
 
-  const formatTime = (s: number) => {
-    const m = Math.floor(s / 60);
-    const sec = Math.floor(s % 60);
-    return `${m}:${String(sec).padStart(2, "0")}`;
-  };
+  const progressPercent =
+    duration > 0 ? Math.min((currentTime / duration) * 100, 100) : 0;
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[70vh] px-6 pt-8">
-      <p className="text-text-muted text-[10px] tracking-[3px] uppercase mb-6">
-        NOW RECITING
-      </p>
+    <div className="px-5 pt-8 pb-10">
+      <section className="app-panel-strong rounded-[2rem] px-6 py-7">
+        <p className="section-kicker">Recitation</p>
+        <h1 className="mt-4 font-display text-4xl text-white">
+          Listen Through The Full Sequence
+        </h1>
+        <p className="mt-3 max-w-md text-sm leading-relaxed text-text-secondary">
+          Follow the continuous recitation while the currently spoken name
+          stays in focus. Skip backward or forward when you want to repeat a
+          section.
+        </p>
 
-      <NameCard name={currentName} size="lg" />
-      <p className="text-text-muted text-xs mt-1">
-        {currentNameIndex + 1} of 99
-      </p>
+        <div className="mt-8 rounded-[1.8rem] border border-white/10 bg-black/20 px-5 py-6">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="section-kicker">Current Name</p>
+              <p className="mt-2 text-sm text-text-secondary">
+                Name {currentNameIndex + 1} of 99
+              </p>
+            </div>
+            <div className="rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+              {playing ? "Playing" : "Paused"}
+            </div>
+          </div>
 
-      <div className="flex items-center gap-2 w-full mt-8">
-        <span className="text-[11px] text-text-muted">
-          {formatTime(currentTime)}
-        </span>
-        <div className="flex-1 h-1 bg-white/5 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-accent-start to-accent rounded-full transition-all"
-            style={{
-              width:
-                duration > 0
-                  ? `${(currentTime / duration) * 100}%`
-                  : "0%",
-            }}
-          />
+          <div className="mt-5">
+            <NameCard name={currentName} size="lg" />
+          </div>
+
+          {audioUnavailable ? (
+            <div className="mt-5 rounded-[1.4rem] border border-error/20 bg-error/10 px-4 py-4">
+              <p className="text-sm font-semibold text-error">
+                Recitation audio is unavailable
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+                The audio player could not load
+                {" "}
+                <span className="font-medium text-white">
+                  {currentName.audioFile}
+                </span>
+                .
+              </p>
+            </div>
+          ) : null}
+
+          <div className="mt-6">
+            <div className="mb-2 flex items-center justify-between gap-4 text-xs text-text-muted">
+              <span>{formatTime(currentTime)}</span>
+              <span>{formatTime(duration)}</span>
+            </div>
+            <div
+              className="h-2 overflow-hidden rounded-full bg-white/5"
+              role="progressbar"
+              aria-label="Recitation playback progress"
+              aria-valuemin={0}
+              aria-valuemax={duration || 0}
+              aria-valuenow={currentTime}
+            >
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-accent-start via-accent-mid to-accent transition-all"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 flex items-center justify-center gap-4">
+            <button
+              type="button"
+              onClick={() => jumpToIndex(currentNameIndex - 1)}
+              disabled={audioUnavailable}
+              aria-label="Play the previous name"
+              className="secondary-button h-14 w-14 rounded-full p-0 disabled:opacity-50"
+            >
+              <PlayerIcon path="M15 18 9 12l6-6M20 18l-6-6 6-6" className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              onClick={togglePlay}
+              disabled={audioUnavailable}
+              aria-label={playing ? "Pause recitation" : "Play recitation"}
+              className="primary-button h-16 w-16 rounded-full p-0 disabled:opacity-50"
+            >
+              {playing ? (
+                <PlayerIcon path="M10 7v10M14 7v10" className="h-7 w-7" />
+              ) : (
+                <PlayerIcon path="m9 7 8 5-8 5z" className="h-7 w-7 fill-current" />
+              )}
+            </button>
+            <button
+              type="button"
+              onClick={() => jumpToIndex(currentNameIndex + 1)}
+              disabled={audioUnavailable}
+              aria-label="Play the next name"
+              className="secondary-button h-14 w-14 rounded-full p-0 disabled:opacity-50"
+            >
+              <PlayerIcon path="m9 18 6-6-6-6M4 18l6-6-6-6" className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="mt-5 flex items-center justify-center">
+            <button
+              type="button"
+              onClick={() => setRepeat((previous) => !previous)}
+              disabled={audioUnavailable}
+              aria-pressed={repeat}
+              className={
+                repeat
+                  ? "rounded-full border border-accent/25 bg-accent/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent disabled:opacity-50"
+                  : "rounded-full border border-white/10 bg-white/[0.03] px-5 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-text-muted transition hover:border-accent/25 hover:text-accent disabled:opacity-50"
+              }
+            >
+              Repeat {repeat ? "On" : "Off"}
+            </button>
+          </div>
         </div>
-        <span className="text-[11px] text-text-muted">
-          {formatTime(duration)}
-        </span>
-      </div>
-
-      <div className="flex items-center gap-8 mt-6">
-        <button onClick={skipPrev} className="text-text-muted text-xl">
-          ⏮
-        </button>
-        <button
-          onClick={togglePlay}
-          className="w-14 h-14 rounded-full bg-accent flex items-center justify-center"
-        >
-          <span className="text-white text-2xl">
-            {playing ? "⏸" : "▶"}
-          </span>
-        </button>
-        <button onClick={skipNext} className="text-text-muted text-xl">
-          ⏭
-        </button>
-      </div>
-
-      <button
-        onClick={() => setRepeat(!repeat)}
-        className={`mt-4 text-xs px-4 py-1.5 rounded-full transition-colors ${
-          repeat
-            ? "bg-accent/15 text-accent"
-            : "bg-surface text-text-muted"
-        }`}
-      >
-        🔁 Repeat: {repeat ? "On" : "Off"}
-      </button>
+      </section>
     </div>
   );
 }

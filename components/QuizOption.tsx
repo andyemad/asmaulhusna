@@ -1,5 +1,6 @@
 "use client";
 
+import ArabicText from "@/components/ArabicText";
 import { Name } from "@/lib/types";
 
 interface QuizOptionProps {
@@ -17,27 +18,56 @@ export default function QuizOption({
   disabled,
   onClick,
 }: QuizOptionProps) {
-  const base =
-    "w-full text-left px-5 py-4 rounded-xl text-[15px] transition-colors border";
-
-  const styles = {
+  const containerStyles = {
     default:
-      "bg-surface border-white/10 text-white/80 hover:border-white/20",
-    correct: "bg-success/10 border-success/40 text-success",
-    wrong: "bg-error/10 border-error/40 text-error",
+      "border-white/10 bg-white/[0.03] text-white hover:border-accent/30 hover:bg-accent/5",
+    correct: "border-success/30 bg-success/10 text-success",
+    wrong: "border-error/30 bg-error/10 text-error",
+  };
+
+  const transliterationStyles = {
+    default: "text-text-muted",
+    correct: "text-success",
+    wrong: "text-error",
   };
 
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`${base} ${styles[state]}`}
+      className={`w-full rounded-[1.45rem] border px-5 py-5 transition ${
+        containerStyles[state]
+      }`}
     >
-      {state === "correct" && "✓ "}
       {displayField === "arabic" ? (
-        <span className="font-arabic text-lg">{name.arabic}</span>
+        <span className="flex flex-col items-center justify-center gap-2">
+          <ArabicText className="text-4xl leading-[1.45] text-white">
+            {name.arabic}
+          </ArabicText>
+          <span
+            className={`text-[11px] font-semibold uppercase tracking-[0.24em] ${
+              transliterationStyles[state]
+            }`}
+          >
+            {name.transliteration}
+          </span>
+        </span>
       ) : (
-        name.meaning
+        <span className="flex items-center justify-between gap-4 text-left">
+          <span className="max-w-[85%] text-lg leading-relaxed text-white">
+            {name.meaning}
+          </span>
+          {state === "correct" ? (
+            <span className="text-sm font-semibold uppercase tracking-[0.18em] text-success">
+              Correct
+            </span>
+          ) : state === "wrong" ? (
+            <span className="text-sm font-semibold uppercase tracking-[0.18em] text-error">
+              Missed
+            </span>
+          ) : null}
+        </span>
       )}
     </button>
   );

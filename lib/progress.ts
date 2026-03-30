@@ -1,4 +1,5 @@
 import { UserProgress, NameProgress } from "./types";
+import { addLocalDays, formatLocalDate } from "./date";
 
 const STORAGE_KEY = "asma-ul-husna-progress";
 
@@ -19,12 +20,45 @@ function getDefaultProgress(): UserProgress {
   };
 }
 
+function normalizeNameProgress(
+  progress?: Partial<NameProgress>
+): NameProgress {
+  return { ...DEFAULT_NAME_PROGRESS, ...progress };
+}
+
+function normalizeProgress(progress?: Partial<UserProgress>): UserProgress {
+  const names = Object.fromEntries(
+    Object.entries(progress?.names ?? {}).map(([id, value]) => [
+      Number(id),
+      normalizeNameProgress(value),
+    ])
+  ) as Record<number, NameProgress>;
+
+  return {
+    names,
+    streak: {
+      current: progress?.streak?.current ?? 0,
+      lastStudyDate: progress?.streak?.lastStudyDate ?? "",
+    },
+    quizHistory: Array.isArray(progress?.quizHistory)
+      ? progress.quizHistory
+      : [],
+    settings: {
+      audioEnabled: progress?.settings?.audioEnabled ?? true,
+      newNamesPerSession: Math.max(
+        1,
+        progress?.settings?.newNamesPerSession ?? 3
+      ),
+    },
+  };
+}
+
 export function loadProgress(): UserProgress {
   if (typeof window === "undefined") return getDefaultProgress();
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return getDefaultProgress();
-    return JSON.parse(raw) as UserProgress;
+    return normalizeProgress(JSON.parse(raw) as UserProgress);
   } catch {
     return getDefaultProgress();
   }
@@ -32,14 +66,17 @@ export function loadProgress(): UserProgress {
 
 export function saveProgress(progress: UserProgress): void {
   if (typeof window === "undefined") return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+  localStorage.setItem(
+    STORAGE_KEY,
+    JSON.stringify(normalizeProgress(progress))
+  );
 }
 
 export function getNameProgress(
   progress: UserProgress,
   nameId: number
 ): NameProgress {
-  return progress.names[nameId] || DEFAULT_NAME_PROGRESS;
+  return normalizeNameProgress(progress.names[nameId]);
 }
 
 export function updateNameProgress(
@@ -57,10 +94,8 @@ export function updateNameProgress(
 }
 
 export function updateStreak(progress: UserProgress): UserProgress {
-  const today = new Date().toISOString().split("T")[0];
-  const yesterday = new Date(Date.now() - 86400000)
-    .toISOString()
-    .split("T")[0];
+  const today = formatLocalDate();
+  const yesterday = addLocalDays(today, -1);
 
   if (progress.streak.lastStudyDate === today) return progress;
 
