@@ -72,7 +72,7 @@ export const changelogEntries: ChangeLogEntry[] = [
       "Updated the places that surface the names publicly, including dedicated name share pages and metadata previews.",
       "Cleaned one broken detail sentence while syncing the names data.",
     ],
-    tags: ["39 corrected entries", "Browse", "Flashcards", "Share cards"],
+    tags: ["45 corrected entries", "Browse", "Flashcards", "Share cards"],
     showNameCorrections: true,
   },
   {
@@ -89,15 +89,16 @@ export const changelogEntries: ChangeLogEntry[] = [
   },
   {
     date: "April 1, 2026",
-    title: "Study flow, sharing, and audio refresh",
+    title: "Study flow, sharing, audio, and intro refresh",
     summary:
-      "The rough prototype was tightened into a more complete study tool with dedicated sharing, better quiz prompts, steadier flashcards, and working audio.",
+      "The rough prototype was tightened into a more complete study tool with a calmer listen-first opening, dedicated sharing, better quiz prompts, steadier flashcards, and working audio.",
     bullets: [
+      "Added the Maher Zain introduction video and a simple listen-first starting point on the home screen.",
       "Added dedicated share pages and preview cards for single names, quiz results, and memorization progress.",
       "Imported the audio set and rebuilt recitation around the per-name playlist so listening works consistently.",
       "Reworked flashcard state so memorized and still-learning actions behave clearly, with better session continuity.",
     ],
-    tags: ["Audio", "Share pages", "Quiz", "Flashcards"],
+    tags: ["Start Here", "Audio", "Share pages", "Flashcards"],
   },
   {
     date: "March 30, 2026",
