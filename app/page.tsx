@@ -8,6 +8,7 @@ import NameOfTheDay from "@/components/NameOfTheDay";
 import ProgressRing from "@/components/ProgressRing";
 import ShareCard from "@/components/ShareCard";
 import ShareSheet from "@/components/ShareSheet";
+import { changelogEntries, changelogSummary } from "@/lib/changelog";
 import { checkMilestones, Milestone } from "@/lib/milestones";
 import {
   getAccuracy,
@@ -103,6 +104,7 @@ export default function Home() {
           : "Start with a short flashcard session and build a steady routine.";
   const libraryCardClass =
     "app-panel group flex min-h-[12rem] flex-col items-center justify-center rounded-[1.8rem] px-6 py-6 text-center transition hover:border-accent/30 hover:bg-accent/5";
+  const latestChange = changelogEntries[0];
 
   useEffect(() => {
     if (!shareStatus) return;
@@ -343,6 +345,71 @@ export default function Home() {
             {shareStatus ? (
               <p className="text-sm text-accent">{shareStatus}</p>
             ) : null}
+          </div>
+        </section>
+
+        <section className="app-panel mt-5 rounded-[2rem] px-6 py-6">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <p className="section-kicker">Changelog</p>
+              <h2 className="mt-3 font-display text-3xl text-white">
+                See what changed
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
+                The full update history now lives in one place, including the
+                refined renderings of the Names and the latest study-flow
+                changes.
+              </p>
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Link href="/changelog" className="primary-button">
+                Open Changelog
+              </Link>
+              <a
+                href={changelogSummary.repositoryUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="secondary-button"
+              >
+                View GitHub
+              </a>
+            </div>
+          </div>
+
+          <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(16rem,0.6fr)]">
+            <Link
+              href="/changelog"
+              className="rounded-[1.5rem] border border-white/8 bg-white/[0.03] px-5 py-5 transition hover:border-accent/30 hover:bg-accent/5"
+            >
+              <p className="text-[10px] uppercase tracking-[0.24em] text-text-muted">
+                Latest update
+              </p>
+              <h3 className="mt-3 font-display text-2xl text-white">
+                {latestChange.title}
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
+                {latestChange.summary}
+              </p>
+              <p className="mt-4 text-xs uppercase tracking-[0.18em] text-accent">
+                {latestChange.date}
+              </p>
+            </Link>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="stat-card text-left">
+                <span className="stat-value">
+                  {changelogSummary.releaseCount}
+                </span>
+                <span className="stat-label">Major updates</span>
+              </div>
+              <div className="stat-card text-left">
+                <span className="stat-value">
+                  {changelogSummary.correctedNameCount}
+                </span>
+                <span className="stat-label">Corrected names</span>
+              </div>
+            </div>
           </div>
         </section>
 
