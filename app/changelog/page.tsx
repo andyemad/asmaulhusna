@@ -17,41 +17,37 @@ export default function ChangelogPage() {
     <div className="px-5 pb-12 pt-8">
       <section className="app-panel-strong rounded-[2.2rem] px-6 py-7 sm:px-8 sm:py-8">
         <p className="section-kicker">Changelog</p>
-        <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-          <div className="max-w-2xl">
-            <h1 className="font-display text-4xl leading-[0.98] text-white sm:text-5xl">
-              The app&apos;s full revision history
-            </h1>
-            <p className="mt-4 max-w-xl text-sm leading-relaxed text-text-secondary sm:text-[0.95rem]">
-              A cleaner record of what changed, when it changed, and which
-              names were corrected in the latest scholarly alignment pass.
-            </p>
-          </div>
+        <h1 className="mt-4 max-w-[12ch] font-display text-[2.85rem] leading-[0.92] text-white sm:max-w-none sm:text-[3.6rem]">
+          The app&apos;s full revision history
+        </h1>
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-text-secondary sm:text-[0.95rem]">
+          A cleaner record of what changed, when it changed, and which names
+          were corrected in the latest scholarly alignment pass.
+        </p>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 lg:min-w-[30rem]">
-            <div className="stat-card text-left sm:text-center">
-              <span className="stat-value">{changelogSummary.releaseCount}</span>
-              <span className="stat-label">Major updates</span>
-            </div>
-            <div className="stat-card text-left sm:text-center">
-              <span className="stat-value">
-                {changelogSummary.correctedNameCount}
-              </span>
-              <span className="stat-label">Corrected names</span>
-            </div>
-            <a
-              href={changelogSummary.repositoryUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="stat-card items-start justify-center text-left transition hover:border-accent/30 hover:bg-accent/5 sm:items-center sm:text-center"
-            >
-              <span className="stat-value text-[1.45rem]">GitHub</span>
-              <span className="stat-label">Open repo</span>
-            </a>
+        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="stat-card text-left sm:text-center">
+            <span className="stat-value">{changelogSummary.releaseCount}</span>
+            <span className="stat-label">Major updates</span>
           </div>
+          <div className="stat-card text-left sm:text-center">
+            <span className="stat-value">
+              {changelogSummary.correctedNameCount}
+            </span>
+            <span className="stat-label">Corrected names</span>
+          </div>
+          <a
+            href={changelogSummary.repositoryUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="stat-card items-start justify-center text-left transition hover:border-accent/30 hover:bg-accent/5 sm:items-center sm:text-center"
+          >
+            <span className="stat-value text-[1.45rem]">GitHub</span>
+            <span className="stat-label">Open repo</span>
+          </a>
         </div>
 
-        <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
           <Link href="/" className="secondary-button">
             Back Home
           </Link>
