@@ -8,7 +8,7 @@ import NameOfTheDay from "@/components/NameOfTheDay";
 import ProgressRing from "@/components/ProgressRing";
 import ShareCard from "@/components/ShareCard";
 import ShareSheet from "@/components/ShareSheet";
-import { changelogEntries, changelogSummary } from "@/lib/changelog";
+import { changelogEntries } from "@/lib/changelog";
 import { checkMilestones, Milestone } from "@/lib/milestones";
 import {
   getAccuracy,
@@ -349,68 +349,33 @@ export default function Home() {
         </section>
 
         <section className="app-panel mt-5 rounded-[2rem] px-6 py-6">
-          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
-            <div className="max-w-2xl">
+          <Link
+            href="/changelog"
+            className="flex items-center justify-between gap-4 rounded-[1.5rem] border border-white/8 bg-white/[0.03] px-5 py-5 transition hover:border-accent/30 hover:bg-accent/5"
+          >
+            <div className="min-w-0">
               <p className="section-kicker">Changelog</p>
-              <h2 className="mt-3 font-display text-3xl text-white">
-                See what changed
+              <h2 className="mt-3 font-display text-2xl text-white sm:text-[2rem]">
+                Recent updates
               </h2>
-              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
-                The full update history now lives in one place, including the
-                refined renderings of the Names and the latest study-flow
-                changes.
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-text-secondary">
+                Names corrections, study-flow fixes, and the full update
+                history.
               </p>
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Link href="/changelog" className="primary-button">
-                Open Changelog
-              </Link>
-              <a
-                href={changelogSummary.repositoryUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="secondary-button"
-              >
-                View GitHub
-              </a>
-            </div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-1 gap-3 lg:grid-cols-[minmax(0,1.4fr)_minmax(16rem,0.6fr)]">
-            <Link
-              href="/changelog"
-              className="rounded-[1.5rem] border border-white/8 bg-white/[0.03] px-5 py-5 transition hover:border-accent/30 hover:bg-accent/5"
-            >
+            <div className="shrink-0 text-right">
               <p className="text-[10px] uppercase tracking-[0.24em] text-text-muted">
-                Latest update
+                Latest
               </p>
-              <h3 className="mt-3 font-display text-2xl text-white">
-                {latestChange.title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-text-secondary">
-                {latestChange.summary}
-              </p>
-              <p className="mt-4 text-xs uppercase tracking-[0.18em] text-accent">
+              <p className="mt-2 text-sm font-medium text-accent">
                 {latestChange.date}
               </p>
-            </Link>
-
-            <div className="grid grid-cols-2 gap-3">
-              <div className="stat-card text-left">
-                <span className="stat-value">
-                  {changelogSummary.releaseCount}
-                </span>
-                <span className="stat-label">Major updates</span>
-              </div>
-              <div className="stat-card text-left">
-                <span className="stat-value">
-                  {changelogSummary.correctedNameCount}
-                </span>
-                <span className="stat-label">Corrected names</span>
-              </div>
+              <p className="mt-2 hidden text-sm text-white sm:block">
+                Open
+              </p>
             </div>
-          </div>
+          </Link>
         </section>
 
         {milestone ? (
