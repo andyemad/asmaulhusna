@@ -3,7 +3,7 @@
     "id": 1,
     "arabic": "ٱلرَّحْمَـٰنُ",
     "transliteration": "Ar-Rahman",
-    "meaning": "The Most Gracious",
+    "meaning": "The Entirely Merciful",
     "description": "The One who has plenty of mercy for the believers and the blasphemers in this world and especially for the believers in the hereafter. His mercy encompasses all of creation.",
     "audioFile": "/audio/001-ar-rahman.mp3"
   },
@@ -11,7 +11,7 @@
     "id": 2,
     "arabic": "ٱلرَّحِيمُ",
     "transliteration": "Ar-Rahim",
-    "meaning": "The Most Merciful",
+    "meaning": "The Especially Merciful",
     "description": "The One who has plenty of mercy for the believers specifically in the hereafter. He singles out the believers with His mercy and rewards them with Paradise.",
     "audioFile": "/audio/002-ar-rahim.mp3"
   },
@@ -19,7 +19,7 @@
     "id": 3,
     "arabic": "ٱلْمَلِكُ",
     "transliteration": "Al-Malik",
-    "meaning": "The King",
+    "meaning": "The Sovereign King",
     "description": "The One with the complete dominion over all creation, whose sovereignty is absolute and eternal. He owns everything and everyone without need of any partner.",
     "audioFile": "/audio/003-al-malik.mp3"
   },
@@ -27,7 +27,7 @@
     "id": 4,
     "arabic": "ٱلْقُدُّوسُ",
     "transliteration": "Al-Quddus",
-    "meaning": "The Most Pure",
+    "meaning": "The Absolutely Pure",
     "description": "The One who is free from every imperfection and far removed from every deficiency. He is pure and holy, transcending all that does not befit His majesty.",
     "audioFile": "/audio/004-al-quddus.mp3"
   },
@@ -43,7 +43,7 @@
     "id": 6,
     "arabic": "ٱلْمُؤْمِنُ",
     "transliteration": "Al-Mu'min",
-    "meaning": "The Guardian of Faith",
+    "meaning": "The Granter of Security",
     "description": "The One who witnessed for Himself that no one is God but Him, and who grants security and safety to His believing servants. He is the source of all true security.",
     "audioFile": "/audio/006-al-mumin.mp3"
   },
@@ -51,7 +51,7 @@
     "id": 7,
     "arabic": "ٱلْمُهَيْمِنُ",
     "transliteration": "Al-Muhaymin",
-    "meaning": "The Protector",
+    "meaning": "The Guardian, the Overseer",
     "description": "The One who witnesses the saying and deeds of His creatures, overseeing and protecting all that exists. He is the guardian who watches over everything.",
     "audioFile": "/audio/007-al-muhaymin.mp3"
   },
@@ -59,7 +59,7 @@
     "id": 8,
     "arabic": "ٱلْعَزِيزُ",
     "transliteration": "Al-Aziz",
-    "meaning": "The Almighty",
+    "meaning": "The All-Mighty",
     "description": "The One who prevails over all things and is never overcome. He is mighty and powerful, and none can resist His will or decree.",
     "audioFile": "/audio/008-al-aziz.mp3"
   },
@@ -75,7 +75,7 @@
     "id": 10,
     "arabic": "ٱلْمُتَكَبِّرُ",
     "transliteration": "Al-Mutakabbir",
-    "meaning": "The Supreme",
+    "meaning": "The Supremely Great",
     "description": "The One who is greater than everything and all attributes of greatness are His alone. He is far above any partner or equal in His supreme majesty.",
     "audioFile": "/audio/010-al-mutakabbir.mp3"
   },
@@ -99,7 +99,7 @@
     "id": 13,
     "arabic": "ٱلْمُصَوِّرُ",
     "transliteration": "Al-Musawwir",
-    "meaning": "The Fashioner",
+    "meaning": "The Fashioner of Forms",
     "description": "The One who forms His creatures in whatever shapes He wills, giving each its particular form and image. He is the artist and shaper of all creation.",
     "audioFile": "/audio/013-al-musawwir.mp3"
   },
@@ -107,7 +107,7 @@
     "id": 14,
     "arabic": "ٱلْغَفَّارُ",
     "transliteration": "Al-Ghaffar",
-    "meaning": "The Ever-Forgiving",
+    "meaning": "The Perpetual Forgiver",
     "description": "The One who forgives the sins of His servants repeatedly and abundantly. He veils the faults of His servants and forgives them time and again.",
     "audioFile": "/audio/014-al-ghaffar.mp3"
   },
@@ -115,7 +115,7 @@
     "id": 15,
     "arabic": "ٱلْقَهَّارُ",
     "transliteration": "Al-Qahhar",
-    "meaning": "The All-Prevailing",
+    "meaning": "The Subduer",
     "description": "The One who has dominance over all things and subdues them completely. Nothing can resist His power or escape His overwhelming authority.",
     "audioFile": "/audio/015-al-qahhar.mp3"
   },
@@ -139,14 +139,14 @@
     "id": 18,
     "arabic": "ٱلْفَتَّاحُ",
     "transliteration": "Al-Fattah",
-    "meaning": "The Opener",
+    "meaning": "The Opener, the Judge",
     "description": "The One who opens the closed doors of mercy and provision for His servants. He is the judge between people and opens the way to all that is good.",
     "audioFile": "/audio/018-al-fattah.mp3"
   },
   {
     "id": 19,
     "arabic": "ٱلْعَلِيمُ",
-    "transliteration": "Al-'Alim",
+    "transliteration": "Al-Alim",
     "meaning": "The All-Knowing",
     "description": "The One whose knowledge encompasses everything, both the hidden and the manifest. Nothing in the heavens or earth or within the souls escapes His knowledge.",
     "audioFile": "/audio/019-al-alim.mp3"
@@ -171,7 +171,7 @@
     "id": 22,
     "arabic": "ٱلْخَافِضُ",
     "transliteration": "Al-Khafid",
-    "meaning": "The Humbler",
+    "meaning": "The Humiliator",
     "description": "The One who lowers and humbles the arrogant and the oppressors. He brings down the tyrants and those who transgress His limits.",
     "audioFile": "/audio/022-al-khafid.mp3"
   },
@@ -226,8 +226,8 @@
   {
     "id": 29,
     "arabic": "ٱلْعَدْلُ",
-    "transliteration": "Al-'Adl",
-    "meaning": "The Just",
+    "transliteration": "Al-Adl",
+    "meaning": "The Utterly Just",
     "description": "The One who is completely and perfectly just in all His decrees and actions. He never wrongs anyone even to the weight of a speck of dust.",
     "audioFile": "/audio/029-al-adl.mp3"
   },
@@ -235,7 +235,7 @@
     "id": 30,
     "arabic": "ٱللَّطِيفُ",
     "transliteration": "Al-Latif",
-    "meaning": "The Subtle",
+    "meaning": "The Subtly Gracious",
     "description": "The One who is kind and gentle to His servants, providing for their needs in ways they do not perceive. He is aware of the finest subtleties in all things.",
     "audioFile": "/audio/030-al-latif.mp3"
   },
@@ -258,7 +258,7 @@
   {
     "id": 33,
     "arabic": "ٱلْعَظِيمُ",
-    "transliteration": "Al-'Azim",
+    "transliteration": "Al-Azim",
     "meaning": "The Magnificent",
     "description": "The One deserving all attributes of greatness, magnificence, and grandeur. His greatness is absolute and beyond all human comprehension.",
     "audioFile": "/audio/033-al-azim.mp3"
@@ -267,7 +267,7 @@
     "id": 34,
     "arabic": "ٱلْغَفُورُ",
     "transliteration": "Al-Ghafur",
-    "meaning": "The Forgiving",
+    "meaning": "The All-Forgiving",
     "description": "The One who forgives the sins of His servants, covering and concealing them. He forgives abundantly and His forgiveness has no limit.",
     "audioFile": "/audio/034-al-ghafur.mp3"
   },
@@ -282,7 +282,7 @@
   {
     "id": 36,
     "arabic": "ٱلْعَلِيُّ",
-    "transliteration": "Al-'Ali",
+    "transliteration": "Al-Ali",
     "meaning": "The Most High",
     "description": "The One who is high above all things in His essence, attributes, and power. Nothing can be above Him and He surpasses all in every respect.",
     "audioFile": "/audio/036-al-ali.mp3"
@@ -291,7 +291,7 @@
     "id": 37,
     "arabic": "ٱلْكَبِيرُ",
     "transliteration": "Al-Kabir",
-    "meaning": "The Greatest",
+    "meaning": "The Most Great",
     "description": "The One who is greater than everything else and the greatest in every sense. All things are small before His infinite greatness.",
     "audioFile": "/audio/037-al-kabir.mp3"
   },
@@ -331,7 +331,7 @@
     "id": 42,
     "arabic": "ٱلْكَرِيمُ",
     "transliteration": "Al-Karim",
-    "meaning": "The Generous",
+    "meaning": "The Most Generous",
     "description": "The One who is most generous and noble, giving abundantly without any reservation. His generosity knows no bounds and He gives to all who ask.",
     "audioFile": "/audio/042-al-karim.mp3"
   },
@@ -379,7 +379,7 @@
     "id": 48,
     "arabic": "ٱلْمَجِيدُ",
     "transliteration": "Al-Majid",
-    "meaning": "The Glorious",
+    "meaning": "The All-Glorious",
     "description": "The One who is glorious in His essence, attributes, and actions. His glory is real and perfect, encompassing all dimensions of greatness.",
     "audioFile": "/audio/048-al-majid.mp3"
   },
@@ -418,8 +418,8 @@
   {
     "id": 53,
     "arabic": "ٱلْقَوِيُّ",
-    "transliteration": "Al-Qawi",
-    "meaning": "The All-Powerful",
+    "transliteration": "Al-Qawiyy",
+    "meaning": "The All-Strong",
     "description": "The One who possesses complete and perfect power over all things. His strength is absolute and nothing can weaken or diminish it.",
     "audioFile": "/audio/053-al-qawi.mp3"
   },
@@ -434,7 +434,7 @@
   {
     "id": 55,
     "arabic": "ٱلْوَلِيُّ",
-    "transliteration": "Al-Wali",
+    "transliteration": "Al-Waliyy",
     "meaning": "The Protecting Friend",
     "description": "The One who is the guardian and helper of the believers. He loves the righteous and takes them as His close friends and allies.",
     "audioFile": "/audio/055-al-wali.mp3"
@@ -451,7 +451,7 @@
     "id": 57,
     "arabic": "ٱلْمُحْصِيُ",
     "transliteration": "Al-Muhsi",
-    "meaning": "The Enumerator",
+    "meaning": "The Counter of All Things",
     "description": "The One who has counted and enumerated all things in their exact number. He keeps a precise record of every deed and every thing that exists.",
     "audioFile": "/audio/057-al-muhsi.mp3"
   },
@@ -483,7 +483,7 @@
     "id": 61,
     "arabic": "ٱلْمُمِيتُ",
     "transliteration": "Al-Mumit",
-    "meaning": "The Taker of Life",
+    "meaning": "The Causer of Death",
     "description": "The One who causes death and brings the lives of His creatures to an end. He alone determines the time and manner of death for every living thing.",
     "audioFile": "/audio/061-al-mumit.mp3"
   },
@@ -515,7 +515,7 @@
     "id": 65,
     "arabic": "ٱلْمَاجِدُ",
     "transliteration": "Al-Majid",
-    "meaning": "The Noble",
+    "meaning": "The Illustrious",
     "description": "The One who is noble and generous in His essence and actions. He possesses honor and glory in the most perfect and complete sense.",
     "audioFile": "/audio/065-al-majid.mp3"
   },
@@ -531,7 +531,7 @@
     "id": 67,
     "arabic": "ٱلْأَحَدُ",
     "transliteration": "Al-Ahad",
-    "meaning": "The Unique",
+    "meaning": "The Unique, the Indivisible",
     "description": "The One who is uniquely singular and indivisible, with no likeness to anything. He is the only one who is truly one in the absolute sense.",
     "audioFile": "/audio/067-al-ahad.mp3"
   },
@@ -539,7 +539,7 @@
     "id": 68,
     "arabic": "ٱلصَّمَدُ",
     "transliteration": "As-Samad",
-    "meaning": "The Eternal",
+    "meaning": "The Eternal Refuge",
     "description": "The One who all of creation depends upon for their needs, while He depends on none. He is the master who is needed by all and needs nothing Himself.",
     "audioFile": "/audio/068-as-samad.mp3"
   },
@@ -547,7 +547,7 @@
     "id": 69,
     "arabic": "ٱلْقَادِرُ",
     "transliteration": "Al-Qadir",
-    "meaning": "The Capable",
+    "meaning": "The All-Capable",
     "description": "The One who has the complete power and ability to do whatever He wills. He is capable of all things and nothing is beyond His power.",
     "audioFile": "/audio/069-al-qadir.mp3"
   },
@@ -555,7 +555,7 @@
     "id": 70,
     "arabic": "ٱلْمُقْتَدِرُ",
     "transliteration": "Al-Muqtadir",
-    "meaning": "The All-Determiner",
+    "meaning": "The All-Powerful",
     "description": "The One who has complete control over all affairs and determines all outcomes. His power is all-encompassing and He executes His will perfectly.",
     "audioFile": "/audio/070-al-muqtadir.mp3"
   },
@@ -619,7 +619,7 @@
     "id": 78,
     "arabic": "ٱلْمُتَعَالِي",
     "transliteration": "Al-Muta'ali",
-    "meaning": "The Self-Exalted",
+    "meaning": "The Supremely Exalted",
     "description": "The One who is supremely exalted above any deficiency or likeness to creation. He transcends all that His creation can imagine or conceive of Him.",
     "audioFile": "/audio/078-al-mutaali.mp3"
   },
@@ -627,7 +627,7 @@
     "id": 79,
     "arabic": "ٱلْبَرُّ",
     "transliteration": "Al-Barr",
-    "meaning": "The Source of Goodness",
+    "meaning": "The Benevolent",
     "description": "The One who is kind and good to His servants, doing them good and warding off evil from them. His goodness is boundless and extends to all creation.",
     "audioFile": "/audio/079-al-barr.mp3"
   },
@@ -635,7 +635,7 @@
     "id": 80,
     "arabic": "ٱلتَّوَّابُ",
     "transliteration": "At-Tawwab",
-    "meaning": "The Accepter of Repentance",
+    "meaning": "The Acceptor of Repentance",
     "description": "The One who repeatedly accepts the repentance of His servants and forgives their sins. He turns back to His servants with mercy whenever they turn back to Him.",
     "audioFile": "/audio/080-at-tawwab.mp3"
   },
@@ -650,7 +650,7 @@
   {
     "id": 82,
     "arabic": "ٱلْعَفُوُّ",
-    "transliteration": "Al-'Afuww",
+    "transliteration": "Al-Afuww",
     "meaning": "The Pardoner",
     "description": "The One who pardons and erases the sins of His servants entirely. He forgives completely, removing all traces of the sin as if it never occurred.",
     "audioFile": "/audio/082-al-afuww.mp3"
@@ -659,14 +659,14 @@
     "id": 83,
     "arabic": "ٱلرَّءُوفُ",
     "transliteration": "Ar-Ra'uf",
-    "meaning": "The Compassionate",
+    "meaning": "The Clement",
     "description": "The One who is full of compassion and kindness toward His servants. His compassion is intensely tender, caring for the well-being of all creation.",
     "audioFile": "/audio/083-ar-rauf.mp3"
   },
   {
     "id": 84,
     "arabic": "مَالِكُ ٱلْمُلْكِ",
-    "transliteration": "Malik-ul-Mulk",
+    "transliteration": "Malik al-Mulk",
     "meaning": "The Owner of All Sovereignty",
     "description": "The One who possesses absolute ownership of all kingdoms and dominions. He gives sovereignty to whom He wills and takes it from whom He wills.",
     "audioFile": "/audio/084-malik-ul-mulk.mp3"
@@ -674,8 +674,8 @@
   {
     "id": 85,
     "arabic": "ذُو ٱلْجَلَالِ وَٱلْإِكْرَامِ",
-    "transliteration": "Dhul-Jalali-wal-Ikram",
-    "meaning": "Lord of Majesty and Generosity",
+    "transliteration": "Dhu al-Jalal wal-Ikram",
+    "meaning": "The Lord of Majesty and Generosity",
     "description": "The One who possesses both perfect majesty and infinite generosity. He combines all attributes of grandeur with all attributes of noble benevolence.",
     "audioFile": "/audio/085-dhul-jalali-wal-ikram.mp3"
   },
@@ -715,7 +715,7 @@
     "id": 90,
     "arabic": "ٱلْمَانِعُ",
     "transliteration": "Al-Mani'",
-    "meaning": "The Preventer",
+    "meaning": "The Withholder",
     "description": "The One who withholds and prevents what He wills out of His wisdom. He protects and prevents harm from reaching those who are under His care.",
     "audioFile": "/audio/090-al-mani.mp3"
   },
@@ -723,7 +723,7 @@
     "id": 91,
     "arabic": "ٱلضَّارُّ",
     "transliteration": "Ad-Darr",
-    "meaning": "The Creator of Harm",
+    "meaning": "The Distresser",
     "description": "The One who is able to cause harm to whomever He wills and through whatever means He chooses. No harm can befall anyone except by His permission and decree.",
     "audioFile": "/audio/091-ad-darr.mp3"
   },
@@ -731,7 +731,7 @@
     "id": 92,
     "arabic": "ٱلنَّافِعُ",
     "transliteration": "An-Nafi'",
-    "meaning": "The Creator of Good",
+    "meaning": "The Benefactor",
     "description": "The One who creates benefit and good for whomever He wills among His creation. All benefit in the world comes from Him and through His decree.",
     "audioFile": "/audio/092-an-nafi.mp3"
   },
@@ -755,15 +755,15 @@
     "id": 95,
     "arabic": "ٱلْبَدِيعُ",
     "transliteration": "Al-Badi'",
-    "meaning": "The Incomparable",
-    "description": "The One who created creation in an unprecedented and unprecedented manner. He is the originator of all things with no prior example and no equal.",
+    "meaning": "The Incomparable Originator",
+    "description": "The One who created creation in an unprecedented manner. He is the originator of all things with no prior example and no equal.",
     "audioFile": "/audio/095-al-badi.mp3"
   },
   {
     "id": 96,
     "arabic": "ٱلْبَاقِي",
     "transliteration": "Al-Baqi",
-    "meaning": "The Everlasting",
+    "meaning": "The Ever-Enduring",
     "description": "The One who will remain forever without end, never perishing or ceasing to exist. While all creation fades, He alone endures for all eternity.",
     "audioFile": "/audio/096-al-baqi.mp3"
   },
@@ -771,7 +771,7 @@
     "id": 97,
     "arabic": "ٱلْوَارِثُ",
     "transliteration": "Al-Warith",
-    "meaning": "The Inheritor",
+    "meaning": "The Inheritor of All",
     "description": "The One who remains after all of creation has perished and inherits all that exists. Everything will ultimately return to Him when all earthly ownership ends.",
     "audioFile": "/audio/097-al-warith.mp3"
   },
@@ -787,7 +787,7 @@
     "id": 99,
     "arabic": "ٱلصَّبُورُ",
     "transliteration": "As-Sabur",
-    "meaning": "The Patient",
+    "meaning": "The Forbearing",
     "description": "The One who is patient and does not hasten to punish the disobedient before the appointed time. He delays and does not rush, giving His servants time and opportunity.",
     "audioFile": "/audio/099-as-sabur.mp3"
   }

@@ -1,15 +1,38 @@
-const DEFAULT_SHARE_ORIGIN = "https://asma-ul-husna.vercel.app";
+function normalizeOrigin(value?: string): string | undefined {
+  if (!value) return undefined;
+  return value.startsWith("http")
+    ? value.replace(/\/$/, "")
+    : `https://${value.replace(/\/$/, "")}`;
+}
+
+const DEFAULT_SHARE_ORIGIN =
+  normalizeOrigin(process.env.VERCEL_PROJECT_PRODUCTION_URL) ||
+  normalizeOrigin(process.env.VERCEL_URL) ||
+  "https://asma-ul-husna-kohl.vercel.app";
 
 export const APP_SHARE_ORIGIN =
-  process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, "") ||
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
+  normalizeOrigin(process.env.NEXT_PUBLIC_APP_URL) ||
+  normalizeOrigin(process.env.NEXT_PUBLIC_SITE_URL) ||
   DEFAULT_SHARE_ORIGIN;
+
+export const APP_SHARE_HOST = new URL(APP_SHARE_ORIGIN).host;
 
 export interface QuizSharePayload {
   score: number;
   total: number;
   accuracy: number;
   missedCount: number;
+}
+
+export interface NameSharePayload {
+  id: number;
+}
+
+export interface ProgressSharePayload {
+  memorized: number;
+  learning: number;
+  streak: number;
+  accuracy: number;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -34,6 +57,56 @@ export function buildAbsoluteUrl(pathname: string): string {
 
 export function buildAbsoluteUrlForServer(pathname: string): string {
   return new URL(pathname, APP_SHARE_ORIGIN).toString();
+}
+
+export function buildProgressShareText({
+  memorized,
+  learning,
+  streak,
+  accuracy,
+}: ProgressSharePayload): string {
+  const parts = [`${memorized}/99 memorized`, `${learning} in learning`];
+
+  if (streak > 0) {
+    parts.push(`${streak}-day streak`);
+  }
+
+  if (accuracy > 0) {
+    parts.push(`${accuracy}% quiz accuracy`);
+  }
+
+  return `I’m studying the 99 Names of Allah in Asma ul Husna: ${parts.join(", ")}.`;
+}
+
+export function buildProgressShareUrl(payload: ProgressSharePayload): string {
+  const url = new URL("/progress/share", getShareOrigin());
+  url.searchParams.set("memorized", String(payload.memorized));
+  url.searchParams.set("learning", String(payload.learning));
+  url.searchParams.set("streak", String(payload.streak));
+  url.searchParams.set("accuracy", String(payload.accuracy));
+  return url.toString();
+}
+
+export function buildProgressShareUrlForServer(
+  payload: ProgressSharePayload
+): string {
+  const url = new URL("/progress/share", APP_SHARE_ORIGIN);
+  url.searchParams.set("memorized", String(payload.memorized));
+  url.searchParams.set("learning", String(payload.learning));
+  url.searchParams.set("streak", String(payload.streak));
+  url.searchParams.set("accuracy", String(payload.accuracy));
+  return url.toString();
+}
+
+export function buildProgressShareImageUrlForServer(
+  payload: ProgressSharePayload
+): string {
+  const url = new URL("/api/share/progress-card", APP_SHARE_ORIGIN);
+  url.searchParams.set("memorized", String(payload.memorized));
+  url.searchParams.set("learning", String(payload.learning));
+  url.searchParams.set("streak", String(payload.streak));
+  url.searchParams.set("accuracy", String(payload.accuracy));
+  return url.toString();
 }
 
 export function buildQuizShareText({
@@ -73,6 +146,72 @@ export function buildQuizShareImageUrlForServer(
   return url.toString();
 }
 
+export function buildNameShareText({
+  transliteration,
+  arabic,
+  meaning,
+}: {
+  transliteration: string;
+  arabic: string;
+  meaning: string;
+}): string {
+  return `${transliteration} (${arabic}) — ${meaning}. One of the 99 Beautiful Names of Allah.`;
+}
+
+export function buildNameShareUrl(id: number): string {
+  const url = new URL("/name/share", getShareOrigin());
+  url.searchParams.set("id", String(id));
+  return url.toString();
+}
+
+export function buildNameShareUrlForServer(id: number): string {
+  const url = new URL("/name/share", APP_SHARE_ORIGIN);
+  url.searchParams.set("id", String(id));
+  return url.toString();
+}
+
+export function buildNameShareImageUrlForServer(id: number): string {
+  const url = new URL("/api/share/name-card", APP_SHARE_ORIGIN);
+  url.searchParams.set("id", String(id));
+  return url.toString();
+}
+
+export function parseNameSharePayload(
+  source:
+    | URLSearchParams
+    | Record<string, string | string[] | undefined>
+): NameSharePayload {
+  const rawId =
+    source instanceof URLSearchParams
+      ? source.get("id") ?? undefined
+      : Array.isArray(source.id)
+        ? source.id[0]
+        : source.id;
+
+  return {
+    id: clamp(Number(rawId ?? 1) || 1, 1, 99),
+  };
+}
+
+export function parseProgressSharePayload(
+  source:
+    | URLSearchParams
+    | Record<string, string | string[] | undefined>
+): ProgressSharePayload {
+  const getValue = (key: string) => {
+    if (source instanceof URLSearchParams) return source.get(key) ?? undefined;
+    const raw = source[key];
+    return Array.isArray(raw) ? raw[0] : raw;
+  };
+
+  return {
+    memorized: clamp(Number(getValue("memorized") ?? 0) || 0, 0, 99),
+    learning: clamp(Number(getValue("learning") ?? 0) || 0, 0, 99),
+    streak: clamp(Number(getValue("streak") ?? 0) || 0, 0, 9999),
+    accuracy: clamp(Number(getValue("accuracy") ?? 0) || 0, 0, 100),
+  };
+}
+
 export function parseQuizSharePayload(
   source:
     | URLSearchParams
@@ -102,14 +241,18 @@ export function parseQuizSharePayload(
   return { score, total, accuracy, missedCount };
 }
 
-export function buildShareTargets(text: string, url: string) {
+export function buildShareTargets(
+  text: string,
+  url: string,
+  emailSubject = "Shared from Asma ul Husna"
+) {
   const encodedText = encodeURIComponent(text);
   const encodedUrl = encodeURIComponent(url);
 
   return {
     x: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
     email: `mailto:?subject=${encodeURIComponent(
-      "My 99 Names of Allah quiz result"
+      emailSubject
     )}&body=${encodeURIComponent(`${text}\n\n${url}`)}`,
     whatsapp: `https://wa.me/?text=${encodeURIComponent(`${text} ${url}`)}`,
     telegram: `https://t.me/share/url?url=${encodedUrl}&text=${encodedText}`,
@@ -196,7 +339,7 @@ export async function generateProgressImage(
   // Branding
   ctx.fillStyle = "rgba(233,223,198,0.28)";
   ctx.font = "12px sans-serif";
-  ctx.fillText("asma-ul-husna.vercel.app", 270, 480);
+  ctx.fillText(APP_SHARE_HOST, 270, 480);
 
   return new Promise((resolve) => {
     canvas.toBlob((blob) => resolve(blob!), "image/png");
@@ -253,7 +396,7 @@ export async function generateCertificateImage(
   // Branding
   ctx.fillStyle = "rgba(233,223,198,0.24)";
   ctx.font = "11px sans-serif";
-  ctx.fillText("asma-ul-husna.vercel.app", 270, 890);
+  ctx.fillText(APP_SHARE_HOST, 270, 890);
 
   return new Promise((resolve) => {
     canvas.toBlob((blob) => resolve(blob!), "image/png");
@@ -354,20 +497,9 @@ export async function generateQuizResultImage({
 
   ctx.fillStyle = "rgba(233,223,198,0.28)";
   ctx.font = "500 18px sans-serif";
-  ctx.fillText("asma-ul-husna.vercel.app", 540, 1080);
+  ctx.fillText(APP_SHARE_HOST, 540, 1080);
 
   return new Promise((resolve) => {
     canvas.toBlob((blob) => resolve(blob!), "image/png");
   });
-}
-
-export async function shareText(
-  text: string,
-  url: string
-): Promise<void> {
-  if (navigator.share) {
-    await navigator.share({ text, url });
-  } else {
-    await navigator.clipboard.writeText(`${text} ${url}`);
-  }
 }

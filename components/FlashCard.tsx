@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Name } from "@/lib/types";
 import AudioButton from "./AudioButton";
 import ArabicText from "./ArabicText";
@@ -8,40 +8,35 @@ import ArabicText from "./ArabicText";
 interface FlashCardProps {
   name: Name;
   number: number;
-  onGotIt: () => void;
-  onMemorized: () => void;
-  onStillLearning: () => void;
+  status: "new" | "learning" | "memorized";
+  canAdvance: boolean;
+  onNextCard: () => void;
+  onSetMemorized: () => void;
+  onSetStillLearning: () => void;
 }
 
 export default function FlashCard({
   name,
   number,
-  onGotIt,
-  onMemorized,
-  onStillLearning,
+  status,
+  canAdvance,
+  onNextCard,
+  onSetMemorized,
+  onSetStillLearning,
 }: FlashCardProps) {
   const [flipped, setFlipped] = useState(false);
-  const touchStartX = useRef(0);
   const instructionId = `flashcard-instructions-${name.id}`;
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    const diff = e.changedTouches[0].clientX - touchStartX.current;
-    if (Math.abs(diff) > 60) {
-      if (diff > 0) onGotIt();
-      else onStillLearning();
-    }
-  };
+  const isLearning = status === "learning";
+  const isMemorized = status === "memorized";
+  const statusMessage =
+    status === "memorized"
+      ? "This Name is marked memorized."
+      : status === "learning"
+        ? "This Name is marked for continued review."
+        : "Choose a status before moving to the next card.";
 
   return (
-    <div
-      className="w-full"
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
-    >
+    <div className="w-full">
       <button
         type="button"
         className="relative block w-full cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#050816]"
@@ -110,40 +105,61 @@ export default function FlashCard({
         className="mt-4 text-center text-sm text-text-secondary"
       >
         {flipped
-          ? "Swipe right if you know it or left if you want more practice."
+          ? "Choose a status, then continue when you're ready."
           : "Tap the card to reveal the meaning."}
       </p>
 
-      {/* Audio */}
-      <div className="flex justify-center mt-5">
+      <div className="mt-5 flex justify-center">
         <AudioButton src={name.audioFile} />
       </div>
 
-      {/* Actions */}
-      <div className="flex gap-3 mt-5">
-        <button
-          onClick={onStillLearning}
-          aria-label={`Mark ${name.transliteration} as still learning`}
-          className="secondary-button flex-1 border-warning/20 bg-warning/10 text-warning"
-        >
-          Still Learning
-        </button>
-        <button
-          onClick={onGotIt}
-          aria-label={`Mark ${name.transliteration} as understood`}
-          className="secondary-button flex-1 border-success/20 bg-success/10 text-success"
-        >
-          Got It ✓
-        </button>
+      <div className="mt-5 rounded-[1.35rem] border border-white/8 bg-white/[0.03] p-3 sm:p-4">
+        <div className="flex items-center justify-between gap-3 px-1">
+          <p className="section-kicker">Study Status</p>
+          <p className="text-xs text-text-muted">{statusMessage}</p>
+        </div>
+
+        <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <button
+            type="button"
+            onClick={onSetStillLearning}
+            aria-pressed={isLearning}
+            aria-label={`Mark ${name.transliteration} as still learning`}
+            className={`rounded-[1.15rem] border px-5 py-4 text-base font-semibold transition ${
+              isLearning
+                ? "border-warning/30 bg-warning/12 text-warning shadow-[0_16px_35px_rgba(197,138,47,0.16)]"
+                : "border-white/10 bg-white/[0.02] text-text-secondary hover:border-warning/20 hover:bg-warning/6 hover:text-warning"
+            }`}
+          >
+            {isLearning ? "Still Learning ✓" : "Still Learning"}
+          </button>
+          <button
+            type="button"
+            onClick={onSetMemorized}
+            aria-pressed={isMemorized}
+            aria-label={`Mark ${name.transliteration} as memorized`}
+            className={`rounded-[1.15rem] border px-5 py-4 text-base font-semibold transition ${
+              isMemorized
+                ? "border-success/30 bg-success/12 text-success shadow-[0_16px_35px_rgba(49,164,125,0.16)]"
+                : "border-white/10 bg-white/[0.02] text-text-secondary hover:border-success/20 hover:bg-success/6 hover:text-success"
+            }`}
+          >
+            {isMemorized ? "Memorized ✓" : "Memorized"}
+          </button>
+        </div>
       </div>
 
-      <button
-        onClick={onMemorized}
-        aria-label={`Mark ${name.transliteration} as memorized`}
-        className="primary-button mt-3 w-full"
-      >
-        Mark Memorized
-      </button>
+      <div className="mt-4">
+        <button
+          type="button"
+          onClick={onNextCard}
+          disabled={!canAdvance}
+          aria-label={`Go to the next flashcard after reviewing ${name.transliteration}`}
+          className={`primary-button w-full ${!canAdvance ? "pointer-events-none opacity-50" : ""}`}
+        >
+          {canAdvance ? "Next Card" : "Choose Status First"}
+        </button>
+      </div>
     </div>
   );
 }

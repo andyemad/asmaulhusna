@@ -212,7 +212,8 @@ export default function QuizPage() {
             Select A Round
           </h1>
           <p className="mx-auto mt-3 max-w-lg text-sm leading-relaxed text-text-secondary">
-            Each quiz uses names you have already studied.
+            Your round stays in step with your flashcards, pulling only from
+            the names you&apos;ve already reached.
           </p>
 
           <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -244,7 +245,7 @@ export default function QuizPage() {
           </div>
 
           <p className="mt-6 text-sm leading-relaxed text-text-muted">
-            10 questions is the default choice.
+            10 questions is a balanced place to start.
           </p>
         </section>
       </div>
@@ -527,7 +528,7 @@ export default function QuizPage() {
         <p className="mt-6 text-center text-sm leading-relaxed text-text-muted">
           {q.type === "arabic-to-meaning"
             ? "Read the Arabic first, then pick the meaning without rushing the diacritics."
-            : "Use the sound and shape of the name, not just a vague visual match."}
+            : "Choose the Arabic and transliteration that match the meaning above."}
         </p>
       </section>
     </div>

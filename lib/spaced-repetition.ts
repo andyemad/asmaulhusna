@@ -25,12 +25,14 @@ export function markGotIt(current: NameProgress): NameProgress {
 
 export function markStillLearning(current: NameProgress): NameProgress {
   const today = todayStr();
+  const lastReviewed = current.lastReviewed === today ? current.lastReviewed : today;
+
   return {
-    status: current.status === "new" ? "learning" : current.status,
+    status: "learning",
     interval: 1,
     nextReview: addLocalDays(today, 1),
     consecutiveCorrect: 0,
-    lastReviewed: today,
+    lastReviewed,
   };
 }
 
