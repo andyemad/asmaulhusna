@@ -54,6 +54,8 @@ const tabs = [
 export default function BottomNav() {
   const pathname = usePathname();
 
+  if (pathname.includes("/share")) return null;
+
   return (
     <nav
       aria-label="Primary navigation"

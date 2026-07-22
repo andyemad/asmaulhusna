@@ -33,14 +33,14 @@ export default function ProgressRing({
       style={{ width: size, height: size }}
     >
       <div className="absolute inset-0 rounded-full bg-white/[0.02] shadow-[0_24px_70px_rgba(0,0,0,0.24)]" />
-      <div className="absolute inset-[10px] rounded-full border border-white/8 bg-[rgba(20,26,44,0.92)]" />
+      <div className="absolute inset-[10px] rounded-full border border-accent/15 bg-[rgba(4,13,18,0.92)]" />
       <svg width={size} height={size} className="relative -rotate-90">
         <circle
           cx={size / 2}
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="rgba(244,221,154,0.12)"
+          stroke="rgba(215,182,111,0.18)"
           strokeWidth={strokeWidth}
         />
         <circle
@@ -48,7 +48,7 @@ export default function ProgressRing({
           cy={size / 2}
           r={radius}
           fill="none"
-          stroke="#d7b067"
+          stroke="#d7b66f"
           strokeWidth={strokeWidth}
           strokeDasharray={circumference}
           strokeDashoffset={offset}

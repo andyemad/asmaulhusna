@@ -39,7 +39,7 @@ export default function ShareCard({
       disabled={!onClick && sharing}
       aria-label="Share your memorization progress"
       title="Share your memorization progress"
-      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-secondary transition hover:border-accent/40 hover:text-accent"
+      className="inline-flex items-center gap-2 border-b border-accent/40 px-1 py-2 text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary transition hover:border-accent hover:text-accent"
     >
       {sharing ? "Sharing" : "Share"}
     </button>

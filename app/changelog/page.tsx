@@ -87,7 +87,7 @@ export default function ChangelogPage() {
           </div>
         </div>
 
-        <details className="mt-6 overflow-hidden rounded-[1.5rem] border border-white/8 bg-white/[0.03]">
+        <details className="mt-6 overflow-hidden border-y border-accent/15 bg-white/[0.02]">
           <summary className="cursor-pointer list-none px-5 py-4 text-left">
             <span className="block text-[10px] uppercase tracking-[0.24em] text-text-muted">
               Full correction list
@@ -106,7 +106,7 @@ export default function ChangelogPage() {
               {nameCorrections.map((correction) => (
                 <article
                   key={correction.id}
-                  className="rounded-[1.25rem] border border-white/8 bg-black/20 p-4"
+                  className="border-l border-accent/15 bg-black/10 p-4"
                 >
                   <p className="text-[10px] font-semibold uppercase tracking-[0.24em] text-accent">
                     Name {String(correction.id).padStart(2, "0")}
@@ -131,9 +131,9 @@ export default function ChangelogPage() {
           {changelogEntries.map((entry) => (
             <article
               key={`${entry.date}-${entry.title}`}
-              className="relative mb-5 rounded-[1.7rem] border border-white/8 bg-white/[0.03] px-5 py-5 last:mb-0"
+              className="relative mb-5 border-l border-accent/15 bg-white/[0.02] px-5 py-5 last:mb-0"
             >
-              <span className="absolute -left-[1.62rem] top-6 h-3 w-3 rounded-full border border-accent/50 bg-accent shadow-[0_0_18px_rgba(244,221,154,0.3)]" />
+              <span className="absolute -left-[1.62rem] top-6 h-3 w-3 rounded-full border border-accent/50 bg-accent shadow-[0_0_18px_rgba(215,182,111,0.3)]" />
               <p className="text-[10px] uppercase tracking-[0.24em] text-text-muted">
                 {entry.date}
               </p>

@@ -282,7 +282,7 @@ export async function generateProgressImage(
   const ctx = canvas.getContext("2d")!;
 
   // Background
-  ctx.fillStyle = "#080b12";
+  ctx.fillStyle = "#03090d";
   ctx.fillRect(0, 0, 540, 540);
 
   const glow = ctx.createRadialGradient(270, 80, 20, 270, 80, 300);
@@ -293,26 +293,26 @@ export async function generateProgressImage(
 
   // Border accent
   const gradient = ctx.createLinearGradient(0, 0, 540, 0);
-  gradient.addColorStop(0, "#f4dd9a");
-  gradient.addColorStop(0.5, "#d3aa60");
-  gradient.addColorStop(1, "#b38436");
+  gradient.addColorStop(0, "#f0d99c");
+  gradient.addColorStop(0.5, "#d7b66f");
+  gradient.addColorStop(1, "#7898b4");
   ctx.strokeStyle = gradient;
   ctx.lineWidth = 2;
   ctx.strokeRect(20, 20, 500, 500);
 
   // Title
-  ctx.fillStyle = "rgba(233,223,198,0.58)";
+  ctx.fillStyle = "rgba(216,208,189,0.58)";
   ctx.font = "11px sans-serif";
   ctx.textAlign = "center";
   ctx.fillText("ASMA UL HUSNA", 270, 120);
 
   // Count
-  ctx.fillStyle = "#fff8eb";
+  ctx.fillStyle = "#f4eddc";
   ctx.font = "bold 72px sans-serif";
   ctx.fillText(`${memorized}/99`, 270, 260);
 
   // Label
-  ctx.fillStyle = "rgba(233,223,198,0.72)";
+  ctx.fillStyle = "rgba(216,208,189,0.72)";
   ctx.font = "16px sans-serif";
   ctx.fillText("Names Memorized", 270, 300);
 
@@ -324,20 +324,20 @@ export async function generateProgressImage(
   ctx.roundRect(barX, 340, barWidth, 8, 4);
   ctx.fill();
 
-  ctx.fillStyle = "#d7b067";
+  ctx.fillStyle = "#d7b66f";
   ctx.beginPath();
   ctx.roundRect(barX, 340, barWidth * (memorized / 99), 8, 4);
   ctx.fill();
 
   // Streak
   if (streak > 0) {
-    ctx.fillStyle = "#d7b067";
+    ctx.fillStyle = "#d7b66f";
     ctx.font = "14px sans-serif";
     ctx.fillText(`${streak} day streak`, 270, 400);
   }
 
   // Branding
-  ctx.fillStyle = "rgba(233,223,198,0.28)";
+  ctx.fillStyle = "rgba(216,208,189,0.28)";
   ctx.font = "12px sans-serif";
   ctx.fillText(APP_SHARE_HOST, 270, 480);
 
@@ -356,14 +356,14 @@ export async function generateCertificateImage(
   const ctx = canvas.getContext("2d")!;
 
   // Background
-  ctx.fillStyle = "#080b12";
+  ctx.fillStyle = "#03090d";
   ctx.fillRect(0, 0, 540, 960);
 
   // Decorative double border
   const gradient = ctx.createLinearGradient(0, 0, 540, 960);
-  gradient.addColorStop(0, "#f4dd9a");
-  gradient.addColorStop(0.5, "#d3aa60");
-  gradient.addColorStop(1, "#b38436");
+  gradient.addColorStop(0, "#f0d99c");
+  gradient.addColorStop(0.5, "#d7b66f");
+  gradient.addColorStop(1, "#7898b4");
   ctx.strokeStyle = gradient;
   ctx.lineWidth = 3;
   ctx.strokeRect(30, 30, 480, 900);
@@ -371,30 +371,30 @@ export async function generateCertificateImage(
   ctx.strokeRect(40, 40, 460, 880);
 
   // Certificate label
-  ctx.fillStyle = "#d7b067";
+  ctx.fillStyle = "#d7b66f";
   ctx.font = "11px sans-serif";
   ctx.textAlign = "center";
   ctx.fillText("CERTIFICATE OF COMPLETION", 270, 120);
 
   // Main text
-  ctx.fillStyle = "rgba(241,234,220,0.76)";
+  ctx.fillStyle = "rgba(244,237,220,0.76)";
   ctx.font = "16px sans-serif";
   ctx.fillText("I have memorized the", 270, 340);
-  ctx.fillStyle = "#d7b067";
+  ctx.fillStyle = "#d7b66f";
   ctx.font = "bold 32px sans-serif";
   ctx.fillText("99 Beautiful Names", 270, 385);
-  ctx.fillStyle = "rgba(241,234,220,0.76)";
+  ctx.fillStyle = "rgba(244,237,220,0.76)";
   ctx.font = "16px sans-serif";
   ctx.fillText("of Allah", 270, 420);
 
   // Date
-  ctx.fillStyle = "rgba(233,223,198,0.46)";
+  ctx.fillStyle = "rgba(216,208,189,0.46)";
   ctx.font = "13px sans-serif";
   ctx.fillText(`Completed on ${completionDate}`, 270, 520);
   ctx.fillText(`${totalDays} days of dedication`, 270, 545);
 
   // Branding
-  ctx.fillStyle = "rgba(233,223,198,0.24)";
+  ctx.fillStyle = "rgba(216,208,189,0.24)";
   ctx.font = "11px sans-serif";
   ctx.fillText(APP_SHARE_HOST, 270, 890);
 
@@ -431,47 +431,47 @@ export async function generateQuizResultImage({
   canvas.height = 1350;
   const ctx = canvas.getContext("2d")!;
 
-  ctx.fillStyle = "#080b12";
+  ctx.fillStyle = "#03090d";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const glow = ctx.createRadialGradient(540, 120, 40, 540, 120, 520);
-  glow.addColorStop(0, "rgba(244,221,154,0.28)");
+  glow.addColorStop(0, "rgba(215,182,111,0.28)");
   glow.addColorStop(1, "rgba(8,11,18,0)");
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   const cardGradient = ctx.createLinearGradient(140, 180, 940, 1100);
-  cardGradient.addColorStop(0, "rgba(20,26,44,0.96)");
-  cardGradient.addColorStop(1, "rgba(10,14,25,0.96)");
+  cardGradient.addColorStop(0, "rgba(16,39,46,0.96)");
+  cardGradient.addColorStop(1, "rgba(4,13,18,0.96)");
   ctx.fillStyle = cardGradient;
   ctx.beginPath();
-  ctx.roundRect(110, 150, 860, 1020, 42);
+  ctx.roundRect(110, 150, 860, 1020, 18);
   ctx.fill();
 
-  ctx.strokeStyle = "rgba(244,221,154,0.26)";
+  ctx.strokeStyle = "rgba(215,182,111,0.26)";
   ctx.lineWidth = 2;
   ctx.beginPath();
-  ctx.roundRect(110, 150, 860, 1020, 42);
+  ctx.roundRect(110, 150, 860, 1020, 18);
   ctx.stroke();
 
   ctx.textAlign = "center";
-  ctx.fillStyle = "rgba(233,223,198,0.68)";
+  ctx.fillStyle = "rgba(216,208,189,0.68)";
   ctx.font = "600 26px sans-serif";
   ctx.fillText("ASMA UL HUSNA", 540, 250);
 
-  ctx.fillStyle = "#fff8eb";
+  ctx.fillStyle = "#f4eddc";
   ctx.font = "700 86px sans-serif";
   ctx.fillText(`${score}/${total}`, 540, 470);
 
-  ctx.fillStyle = "#d7b067";
+  ctx.fillStyle = "#d7b66f";
   ctx.font = "700 42px sans-serif";
   ctx.fillText(`${accuracy}% accuracy`, 540, 540);
 
-  ctx.fillStyle = "rgba(241,234,220,0.82)";
+  ctx.fillStyle = "rgba(244,237,220,0.82)";
   ctx.font = "500 30px sans-serif";
   ctx.fillText("99 Names of Allah Quiz", 540, 610);
 
-  ctx.fillStyle = "rgba(233,223,198,0.64)";
+  ctx.fillStyle = "rgba(216,208,189,0.64)";
   ctx.font = "500 24px sans-serif";
   ctx.fillText(
     missedCount > 0
@@ -486,16 +486,16 @@ export async function generateQuizResultImage({
   ctx.roundRect(250, 770, 580, 16, 8);
   ctx.fill();
 
-  ctx.fillStyle = "#d7b067";
+  ctx.fillStyle = "#d7b66f";
   ctx.beginPath();
   ctx.roundRect(250, 770, 580 * (accuracy / 100), 16, 8);
   ctx.fill();
 
-  ctx.fillStyle = "rgba(233,223,198,0.46)";
+  ctx.fillStyle = "rgba(216,208,189,0.46)";
   ctx.font = "500 20px sans-serif";
   ctx.fillText("Memorize with flashcards, quizzes, and daily review", 540, 930);
 
-  ctx.fillStyle = "rgba(233,223,198,0.28)";
+  ctx.fillStyle = "rgba(216,208,189,0.28)";
   ctx.font = "500 18px sans-serif";
   ctx.fillText(APP_SHARE_HOST, 540, 1080);
 

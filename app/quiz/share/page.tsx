@@ -45,7 +45,7 @@ export default function QuizSharePage({ searchParams }: SharePageProps) {
 
   return (
     <div className="px-5 py-10">
-      <section className="app-panel-strong overflow-hidden rounded-[2.2rem] px-6 py-8 text-center">
+      <section className="app-panel-strong overflow-hidden px-6 py-10 text-center">
         <p className="section-kicker">Asma ul Husna</p>
         <h1 className="mt-4 font-display text-4xl text-white">
           99 Names Quiz Result
@@ -54,7 +54,7 @@ export default function QuizSharePage({ searchParams }: SharePageProps) {
           {buildQuizShareText(payload)}
         </p>
 
-        <div className="mx-auto mt-8 max-w-xl rounded-[2rem] border border-accent/20 bg-black/20 px-6 py-7">
+        <div className="mx-auto mt-8 max-w-xl border-y border-accent/20 bg-black/10 px-6 py-8">
           <p className="section-kicker">Shared Score</p>
           <p className="mt-4 font-display text-6xl leading-none text-white">
             {payload.score}/{payload.total}

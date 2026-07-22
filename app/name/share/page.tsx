@@ -56,25 +56,25 @@ export default function NameSharePage({ searchParams }: NameSharePageProps) {
 
   return (
     <div className="px-5 py-10">
-      <section className="app-panel-strong overflow-hidden rounded-[2.2rem] px-6 py-8 text-center">
+      <section className="app-panel-strong overflow-hidden px-6 py-10 text-center">
         <p className="section-kicker">Asma ul Husna</p>
 
         <div className="mt-8">
           <ArabicText
             as="h1"
-            className="text-6xl leading-[1.4] text-white sm:text-7xl"
+            className="text-6xl leading-[1.4] text-text-strong sm:text-7xl"
           >
             {name.arabic}
           </ArabicText>
           <p className="mt-4 text-sm font-semibold uppercase tracking-[0.26em] text-accent">
             {name.transliteration}
           </p>
-          <p className="mt-5 font-display text-4xl leading-tight text-white sm:text-5xl">
+          <p className="mt-5 font-display text-4xl leading-tight text-text-strong sm:text-5xl">
             {name.meaning}
           </p>
         </div>
 
-        <div className="mx-auto mt-8 max-w-2xl rounded-[2rem] border border-accent/15 bg-black/20 px-6 py-6">
+        <div className="mx-auto mt-8 max-w-2xl border-y border-accent/20 bg-black/10 px-6 py-7">
           <p className="section-kicker">
             Name {String(name.id).padStart(2, "0")} of 99
           </p>

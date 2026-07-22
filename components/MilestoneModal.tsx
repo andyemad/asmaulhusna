@@ -35,12 +35,16 @@ export default function MilestoneModal({
     document.body.style.overflow = "hidden";
     continueButtonRef.current?.focus();
 
-    confetti({
-      particleCount: 120,
-      spread: 72,
-      origin: { y: 0.58 },
-      colors: ["#f4dd9a", "#d7b067", "#b38436", "#79c69a", "#fff8eb"],
-    });
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      confetti({
+        particleCount: 42,
+        spread: 58,
+        startVelocity: 22,
+        gravity: 0.7,
+        origin: { y: 0.58 },
+        colors: ["#f0d99c", "#d7b66f", "#7898b4", "#f4eddc"],
+      });
+    }
 
     const getFocusableElements = () => {
       if (!dialogRef.current) return [];
