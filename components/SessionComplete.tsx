@@ -42,7 +42,7 @@ export default function SessionComplete({
 
   return (
     <div className="px-6 py-10">
-      <div className="app-panel-strong rounded-[2rem] p-8 text-center">
+      <div className="app-panel-strong p-8 text-center">
         <p className="section-kicker">Session complete</p>
         <h2 className="mt-4 font-display text-4xl text-white">
           Strong work today

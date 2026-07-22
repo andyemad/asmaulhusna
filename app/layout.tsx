@@ -28,9 +28,9 @@ const bodyFont = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Asma ul Husna — 99 Names of Allah",
+  title: "Asma ul Husna — The 99 Beautiful Names of Allah",
   description:
-    "Memorize the 99 Beautiful Names of Allah with flashcards, quizzes, and spaced repetition.",
+    "Learn, contemplate, and memorize the 99 Beautiful Names of Allah with guided study, audio, flashcards, and spaced repetition.",
   applicationName: "Asma ul Husna",
   manifest: "/manifest.json",
   keywords: [
@@ -41,22 +41,22 @@ export const metadata: Metadata = {
     "flashcards",
   ],
   openGraph: {
-    title: "Asma ul Husna — 99 Names of Allah",
+    title: "Asma ul Husna — The 99 Beautiful Names of Allah",
     description:
-      "Memorize the 99 Beautiful Names of Allah with flashcards, quizzes, and spaced repetition.",
+      "A contemplative study companion for learning the Beautiful Names of Allah.",
     type: "website",
     siteName: "Asma ul Husna",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Asma ul Husna — 99 Names of Allah",
+    title: "Asma ul Husna — The 99 Beautiful Names of Allah",
     description:
-      "Memorize the 99 Beautiful Names of Allah with flashcards, quizzes, and spaced repetition.",
+      "A contemplative study companion for learning the Beautiful Names of Allah.",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0a0a",
+  themeColor: "#061016",
   width: "device-width",
   initialScale: 1,
   colorScheme: "dark",
@@ -72,11 +72,11 @@ export default function RootLayout({
       lang="en"
       className={`${arabicFont.variable} ${displayFont.variable} ${bodyFont.variable}`}
     >
-      <body className="min-h-screen bg-[#050816] font-sans text-text-primary antialiased">
+      <body className="min-h-screen bg-[#061016] font-sans text-text-primary antialiased">
         <a href="#main-content" className="skip-link">
           Skip to content
         </a>
-        <main id="main-content" className="pb-32 max-w-xl mx-auto">
+        <main id="main-content" className="mx-auto max-w-3xl pb-32">
           {children}
         </main>
         <BottomNav />

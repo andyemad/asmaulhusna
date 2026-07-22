@@ -166,7 +166,7 @@ export default function RecitationPage() {
 
   return (
     <div className="px-5 pt-8 pb-10">
-      <section className="app-panel-strong rounded-[2rem] px-6 py-7">
+      <section className="app-panel-strong px-6 py-7 sm:px-9 sm:py-10">
         <p className="section-kicker">Recitation</p>
         <h1 className="mt-4 font-display text-4xl text-white">
           Listen Through The Full Sequence
@@ -177,7 +177,7 @@ export default function RecitationPage() {
           section.
         </p>
 
-        <div className="mt-8 rounded-[1.8rem] border border-white/10 bg-black/20 px-5 py-6">
+        <div className="mt-8 border-y border-accent/20 bg-black/10 px-2 py-7 sm:px-5">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="section-kicker">Current Name</p>
@@ -185,7 +185,7 @@ export default function RecitationPage() {
                 Name {currentNameIndex + 1} of 99
               </p>
             </div>
-            <div className="rounded-full border border-accent/20 bg-accent/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+            <div className="border-b border-accent/40 px-2 py-2 text-[10px] font-semibold uppercase tracking-[0.2em] text-accent">
               {playing ? "Playing" : "Paused"}
             </div>
           </div>
@@ -216,7 +216,7 @@ export default function RecitationPage() {
               <span>{formatTime(duration)}</span>
             </div>
             <div
-              className="h-2 overflow-hidden rounded-full bg-white/5"
+              className="h-1 overflow-hidden bg-white/5"
               role="progressbar"
               aria-label="Recitation playback progress"
               aria-valuemin={0}
@@ -224,7 +224,7 @@ export default function RecitationPage() {
               aria-valuenow={currentTime}
             >
               <div
-                className="h-full rounded-full bg-gradient-to-r from-accent-start via-accent-mid to-accent transition-all"
+                className="h-full bg-gradient-to-r from-accent-start via-accent-mid to-accent transition-all"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>

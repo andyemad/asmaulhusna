@@ -54,10 +54,10 @@ export default function FlashCard({
         >
           {/* Front */}
           <div
-            className="app-panel-strong flex min-h-[340px] flex-col items-center justify-center rounded-[1.8rem] p-8 text-center sm:min-h-[380px] sm:p-10"
+            className="app-panel-strong flex min-h-[340px] flex-col items-center justify-center p-8 text-center sm:min-h-[380px] sm:p-10"
             style={{ backfaceVisibility: "hidden" }}
           >
-            <span className="absolute right-5 top-5 rounded-full border border-accent/10 bg-accent/10 px-3 py-1 text-sm font-semibold tracking-[0.22em] text-accent/80">
+            <span className="absolute right-5 top-5 border-b border-accent/35 px-1 py-1 text-sm font-semibold tracking-[0.22em] text-accent/80">
               {String(number).padStart(2, "0")}
             </span>
             <p className="section-kicker">Flashcard</p>
@@ -74,13 +74,13 @@ export default function FlashCard({
 
           {/* Back */}
           <div
-            className="app-panel-strong absolute inset-0 flex h-full flex-col overflow-hidden rounded-[1.8rem] p-8 text-center sm:p-10"
+            className="app-panel-strong absolute inset-0 flex h-full flex-col overflow-hidden p-8 text-center sm:p-10"
             style={{
               backfaceVisibility: "hidden",
               transform: "rotateY(180deg)",
             }}
           >
-            <span className="absolute right-5 top-5 rounded-full border border-accent/10 bg-accent/10 px-3 py-1 text-sm font-semibold tracking-[0.22em] text-accent/80">
+            <span className="absolute right-5 top-5 border-b border-accent/35 px-1 py-1 text-sm font-semibold tracking-[0.22em] text-accent/80">
               {String(number).padStart(2, "0")}
             </span>
             <p className="section-kicker">Meaning</p>
@@ -113,7 +113,7 @@ export default function FlashCard({
         <AudioButton src={name.audioFile} />
       </div>
 
-      <div className="mt-5 rounded-[1.35rem] border border-white/8 bg-white/[0.03] p-3 sm:p-4">
+      <div className="mt-6 border-y border-accent/20 py-4">
         <div className="flex items-center justify-between gap-3 px-1">
           <p className="section-kicker">Study Status</p>
           <p className="text-xs text-text-muted">{statusMessage}</p>
@@ -125,7 +125,7 @@ export default function FlashCard({
             onClick={onSetStillLearning}
             aria-pressed={isLearning}
             aria-label={`Mark ${name.transliteration} as still learning`}
-            className={`rounded-[1.15rem] border px-5 py-4 text-base font-semibold transition ${
+            className={`border px-5 py-4 text-base font-semibold transition ${
               isLearning
                 ? "border-warning/30 bg-warning/12 text-warning shadow-[0_16px_35px_rgba(197,138,47,0.16)]"
                 : "border-white/10 bg-white/[0.02] text-text-secondary hover:border-warning/20 hover:bg-warning/6 hover:text-warning"
@@ -138,7 +138,7 @@ export default function FlashCard({
             onClick={onSetMemorized}
             aria-pressed={isMemorized}
             aria-label={`Mark ${name.transliteration} as memorized`}
-            className={`rounded-[1.15rem] border px-5 py-4 text-base font-semibold transition ${
+            className={`border px-5 py-4 text-base font-semibold transition ${
               isMemorized
                 ? "border-success/30 bg-success/12 text-success shadow-[0_16px_35px_rgba(49,164,125,0.16)]"
                 : "border-white/10 bg-white/[0.02] text-text-secondary hover:border-success/20 hover:bg-success/6 hover:text-success"

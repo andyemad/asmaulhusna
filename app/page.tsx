@@ -1,12 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import ArabicText from "@/components/ArabicText";
 import MilestoneModal from "@/components/MilestoneModal";
 import NameOfTheDay from "@/components/NameOfTheDay";
-import ProgressRing from "@/components/ProgressRing";
-import ShareCard from "@/components/ShareCard";
 import ShareSheet from "@/components/ShareSheet";
 import { changelogEntries } from "@/lib/changelog";
 import { checkMilestones, Milestone } from "@/lib/milestones";
@@ -30,8 +28,34 @@ import { UserProgress } from "@/lib/types";
 
 const INSPIRATION_VIDEO_URL =
   "https://youtu.be/Ehna_-dkvNU?si=gzkaJjdTOxwSJ4XI";
-const INSPIRATION_EMBED_URL =
-  "https://www.youtube-nocookie.com/embed/Ehna_-dkvNU?rel=0";
+
+const methods = [
+  {
+    href: "/browse",
+    number: "01",
+    title: "Contemplate",
+    description: "Read every Name, its meaning, and a concise explanation.",
+    action: "Browse all Names",
+  },
+  {
+    href: "/recitation",
+    number: "02",
+    title: "Listen",
+    description: "Hear the Names in sequence and follow at a peaceful pace.",
+    action: "Begin recitation",
+  },
+  {
+    href: "/quiz",
+    number: "03",
+    title: "Remember",
+    description: "Strengthen recall with a focused, adaptive quiz.",
+    action: "Test your recall",
+  },
+];
+
+function Arrow() {
+  return <span aria-hidden="true">↗</span>;
+}
 
 export default function Home() {
   const [progress, setProgress] = useState<UserProgress | null>(null);
@@ -44,7 +68,6 @@ export default function Home() {
   useEffect(() => {
     const loadedProgress = loadProgress();
     setProgress(loadedProgress);
-
     const nextMilestone = checkMilestones(loadedProgress);
     if (nextMilestone) setMilestone(nextMilestone);
   }, []);
@@ -56,24 +79,14 @@ export default function Home() {
   const streak = progress?.streak.current ?? 0;
   const completion = Math.round((memorized / 99) * 100);
   const newCount = Math.max(99 - memorized - learning, 0);
+  const latestChange = changelogEntries[0];
+
   const progressShareUrl = useMemo(
-    () =>
-      buildProgressShareUrl({
-        memorized,
-        learning,
-        streak,
-        accuracy,
-      }),
+    () => buildProgressShareUrl({ memorized, learning, streak, accuracy }),
     [accuracy, learning, memorized, streak]
   );
   const progressShareText = useMemo(
-    () =>
-      buildProgressShareText({
-        memorized,
-        learning,
-        streak,
-        accuracy,
-      }),
+    () => buildProgressShareText({ memorized, learning, streak, accuracy }),
     [accuracy, learning, memorized, streak]
   );
   const progressShareTargets = useMemo(
@@ -88,33 +101,26 @@ export default function Home() {
 
   const nextStepLabel =
     dueToday > 0
-      ? "Review Due Names"
+      ? "Review what is due"
       : memorized === 0
-        ? "Begin Study"
+        ? "Meet your first Names"
         : learning > 0
-          ? "Continue Review"
-          : "Learn New Names";
+          ? "Continue your review"
+          : "Learn new Names";
   const nextStepHint =
     dueToday > 0
-      ? `${dueToday} ${dueToday === 1 ? "name is" : "names are"} due today.`
+      ? `${dueToday} ${dueToday === 1 ? "Name is" : "Names are"} ready for review.`
       : learning > 0
-        ? `${learning} ${learning === 1 ? "name is" : "names are"} still in review.`
+        ? `${learning} ${learning === 1 ? "Name is" : "Names are"} still taking root.`
         : memorized > 0
-          ? "No reviews are due right now, so this is a good time to add a few new names."
-          : "Start with a short flashcard session and build a steady routine.";
-  const libraryCardClass =
-    "app-panel group flex min-h-[12rem] flex-col items-center justify-center rounded-[1.8rem] px-6 py-6 text-center transition hover:border-accent/30 hover:bg-accent/5";
-  const latestChange = changelogEntries[0];
+          ? "Your reviews are clear. Add a few new Names when you are ready."
+          : "Begin with a short session. Attention matters more than speed.";
 
   useEffect(() => {
     if (!shareStatus) return;
     const timeout = window.setTimeout(() => setShareStatus(null), 2800);
     return () => window.clearTimeout(timeout);
   }, [shareStatus]);
-
-  const openProgressShare = useCallback(() => {
-    setShareSheetOpen(true);
-  }, []);
 
   const handleNativeShare = useCallback(async () => {
     setSharing(true);
@@ -161,222 +167,213 @@ export default function Home() {
 
   return (
     <>
-      <div className="px-5 pt-8 pb-10">
-        <section className="app-panel-strong overflow-hidden rounded-[2.2rem] px-4 py-4 sm:px-5 sm:py-5">
-          <div className="overflow-hidden rounded-[1.7rem] border border-white/10 bg-black/35 shadow-[0_20px_60px_rgba(0,0,0,0.28)]">
-            <div className="aspect-video">
-              <iframe
-                src={INSPIRATION_EMBED_URL}
-                title="Maher Zain - Asma Allah Al Husna"
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                referrerPolicy="strict-origin-when-cross-origin"
-                className="h-full w-full"
-              />
+      <div className="px-3 pb-12 pt-3 sm:px-5 sm:pt-5">
+        <section className="sanctuary-hero flex flex-col px-6 pb-28 pt-7 sm:px-12 sm:pb-28 sm:pt-9">
+          <div className="hero-starfield" aria-hidden="true" />
+          <div className="relative z-10 flex items-center justify-between gap-5">
+            <div>
+              <p className="section-kicker">Asma ul Husna</p>
+              <p className="mt-1.5 text-[10px] uppercase tracking-[0.18em] text-text-muted">
+                A contemplative study companion
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShareSheetOpen(true)}
+              aria-label="Share your memorization progress"
+              className="grid h-10 w-10 place-items-center border border-white/10 text-text-secondary transition hover:border-accent/50 hover:text-accent"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className="h-4 w-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                aria-hidden="true"
+              >
+                <circle cx="18" cy="5" r="2.5" />
+                <circle cx="6" cy="12" r="2.5" />
+                <circle cx="18" cy="19" r="2.5" />
+                <path d="m8.2 10.8 7.6-4.5M8.2 13.2l7.6 4.5" />
+              </svg>
+            </button>
+          </div>
+
+          <div className="relative z-10 flex flex-1 flex-col items-center justify-center py-5 text-center">
+            <div className="celestial-seal">
+              <span className="seal-diamond" aria-hidden="true" />
+              <div className="relative z-10 px-6">
+                <ArabicText className="glow-arabic text-[3.35rem] leading-[1.35] text-white sm:text-[4.5rem]">
+                  أسماء الله الحسنى
+                </ArabicText>
+                <div className="ornament-rule mx-auto mt-3 max-w-[12rem] text-[9px]">
+                  <span>◆</span>
+                </div>
+                <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.3em] text-accent">
+                  The Beautiful Names
+                </p>
+              </div>
+            </div>
+
+            <h1 className="mt-2 max-w-lg font-display text-[2.65rem] leading-[0.96] text-white sm:text-6xl">
+              Learn slowly.
+              <br />
+              Remember deeply.
+            </h1>
+            <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-text-secondary">
+              Study the Names of Allah through meaning, listening, and steady
+              remembrance.
+            </p>
+          </div>
+
+          <div className="relative z-10 grid gap-3 sm:grid-cols-2">
+            <Link href="/flashcards" className="primary-button">
+              Begin today&apos;s practice <span aria-hidden="true">→</span>
+            </Link>
+            <Link href="/browse" className="secondary-button">
+              Explore all 99 Names
+            </Link>
+          </div>
+        </section>
+
+        <section className="mt-16 grid gap-8 px-3 sm:grid-cols-[10rem_1fr] sm:items-center sm:px-6">
+          <div className="progress-orbit mx-auto">
+            <div className="relative z-10 text-center">
+              <p className="font-display text-4xl leading-none text-white">
+                {memorized}
+                <span className="ml-1 text-sm text-text-muted">/99</span>
+              </p>
+              <p className="mt-2 text-[9px] font-bold uppercase tracking-[0.2em] text-text-muted">
+                Remembered
+              </p>
             </div>
           </div>
 
-          <div className="px-1 pb-2 pt-5 sm:px-2">
-            <p className="section-kicker">Start Here</p>
-            <h1 className="mt-3 font-display text-4xl leading-[0.98] text-white sm:text-5xl">
-              Listen First
-            </h1>
-            <p className="mt-4 max-w-lg text-sm leading-relaxed text-text-secondary sm:text-[0.95rem]">
-              A beautiful place to begin. Listen once, let the Names settle in,
-              then come back and learn them one by one.
+          <div>
+            <p className="section-kicker">Your journey</p>
+            <h2 className="mt-3 font-display text-4xl leading-none text-white sm:text-5xl">
+              A little, every day.
+            </h2>
+            <p className="mt-4 max-w-md text-sm leading-7 text-text-secondary">
+              Your progress stays on this device. Return when you can; continue
+              where you left off.
             </p>
-
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-              <a
-                href={INSPIRATION_VIDEO_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="secondary-button flex-1"
-              >
-                Watch On YouTube
-              </a>
-              <Link href="/flashcards" className="primary-button flex-1">
-                Begin Learning
+            <div className="mt-6 grid grid-cols-3">
+              <Link href="/browse?status=learning" className="stat-card">
+                <span className="stat-value">{learning}</span>
+                <span className="stat-label">Learning</span>
+              </Link>
+              <div className="stat-card">
+                <span className="stat-value">{streak}</span>
+                <span className="stat-label">Day streak</span>
+              </div>
+              <Link href="/browse?status=new" className="stat-card">
+                <span className="stat-value">{newCount}</span>
+                <span className="stat-label">New</span>
               </Link>
             </div>
           </div>
         </section>
 
-        <section className="app-panel-strong mt-5 overflow-hidden rounded-[2.2rem] px-6 py-7 text-center">
-          <div className="flex items-start justify-between gap-4">
-            <p className="section-kicker text-left">Asma ul Husna</p>
-            <ShareCard
-              memorized={memorized}
-              streak={streak}
-              onClick={openProgressShare}
-            />
-          </div>
-
-          <ArabicText className="mt-8 text-5xl leading-[1.55] text-white sm:text-6xl">
-            أسماء الله الحسنى
-          </ArabicText>
-          <p className="mt-4 text-sm font-semibold uppercase tracking-[0.24em] text-accent">
-            The 99 Beautiful Names of Allah
-          </p>
-          <h1 className="mx-auto mt-5 max-w-xl font-display text-4xl text-white sm:text-5xl">
-            A simple daily practice
-          </h1>
-          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-text-secondary">
-            Study, review, and listen at a steady pace.
-          </p>
-
-          <div className="mt-8 flex justify-center">
-            <ProgressRing value={memorized} max={99} />
-          </div>
-
-          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <Link
-              href="/browse?status=memorized"
-              className="rounded-[1.2rem] border border-white/8 bg-white/[0.03] px-4 py-4 text-left transition hover:border-accent/30 hover:bg-accent/5"
-            >
-              <p className="font-display text-3xl text-white">{memorized}</p>
-              <p className="mt-2 text-[10px] uppercase tracking-[0.24em] text-text-muted">
-                Memorized
-              </p>
-            </Link>
-            <Link
-              href="/browse?status=learning"
-              className="rounded-[1.2rem] border border-white/8 bg-white/[0.03] px-4 py-4 text-left transition hover:border-accent/30 hover:bg-accent/5"
-            >
-              <p className="font-display text-3xl text-white">{learning}</p>
-              <p className="mt-2 text-[10px] uppercase tracking-[0.24em] text-text-muted">
-                Learning
-              </p>
-            </Link>
-            <Link
-              href="/browse?status=new"
-              className="rounded-[1.2rem] border border-white/8 bg-white/[0.03] px-4 py-4 text-left transition hover:border-accent/30 hover:bg-accent/5"
-            >
-              <p className="font-display text-3xl text-white">{newCount}</p>
-              <p className="mt-2 text-[10px] uppercase tracking-[0.24em] text-text-muted">
-                New
-              </p>
-            </Link>
-          </div>
-
-          <p className="mt-5 text-sm text-text-muted">
-            {accuracy > 0 ? `Quiz score: ${accuracy}%` : `${streak}-day streak`}
-          </p>
-
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link href="/flashcards" className="primary-button flex-1">
-              Flashcards
-            </Link>
-            <Link href="/quiz" className="secondary-button flex-1">
-              Quiz
-            </Link>
-          </div>
-        </section>
-
-        <section className="app-panel mt-5 rounded-[2rem] px-6 py-6">
-          <div className="flex items-start justify-between gap-4">
+        <section className="app-panel-strong mt-16 p-6 sm:p-9">
+          <div className="grid gap-7 sm:grid-cols-[1fr_auto] sm:items-end">
             <div>
-              <p className="section-kicker">Today</p>
-              <h2 className="mt-3 font-display text-3xl text-white">
+              <p className="section-kicker">Today&apos;s path</p>
+              <h2 className="mt-4 max-w-md font-display text-4xl leading-none text-white sm:text-5xl">
                 {nextStepLabel}
               </h2>
-              <p className="mt-3 max-w-md text-sm leading-relaxed text-text-secondary">
+              <p className="mt-4 max-w-md text-sm leading-7 text-text-secondary">
                 {nextStepHint}
               </p>
             </div>
-            <div className="rounded-[1.3rem] border border-accent/20 bg-accent/10 px-4 py-3 text-right">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-text-muted">
-                Completion
+            <div className="border-l border-accent/25 pl-5">
+              <p className="text-[9px] font-bold uppercase tracking-[0.22em] text-text-muted">
+                Complete
               </p>
-              <p className="mt-2 font-display text-3xl text-white">
+              <p className="mt-2 font-display text-4xl text-white">
                 {completion}%
               </p>
             </div>
           </div>
-
-          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-            <Link href="/flashcards" className="primary-button flex-1">
-              {dueToday > 0 ? "Open Flashcards" : "Start Flashcards"}
+          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+            <Link href="/flashcards" className="primary-button">
+              {dueToday > 0 ? "Review due Names" : "Start a short session"}
             </Link>
-            <Link href="/quiz" className="secondary-button flex-1">
-              Open Quiz
+            <Link href="/quiz" className="secondary-button">
+              Practice with a quiz
             </Link>
           </div>
         </section>
 
-        <div className="mt-5">
+        <div className="mt-16">
           <NameOfTheDay />
         </div>
 
-        <section className="app-panel mt-5 rounded-[2rem] px-6 py-6">
-          <p className="section-kicker">Library</p>
-          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">
-            <Link href="/browse" className={libraryCardClass}>
-              <span className="font-display text-[2.8rem] leading-[0.92] text-white">
-                Browse
-              </span>
-              <span className="mt-4 max-w-[10rem] text-sm font-medium leading-[1.4] text-text-secondary">
-                All 99 Names
-              </span>
-            </Link>
-            <Link href="/recitation" className={libraryCardClass}>
-              <span className="font-display text-[2.8rem] leading-[0.92] text-white">
-                Recite
-              </span>
-              <span className="mt-4 max-w-[10rem] text-sm font-medium leading-[1.4] text-text-secondary">
-                Guided listening
-              </span>
-            </Link>
-            <button
-              type="button"
-              onClick={openProgressShare}
-              className={libraryCardClass}
-            >
-              <span className="font-display text-[2.8rem] leading-[0.92] text-white">
-                Share
-              </span>
-              <span className="mt-4 max-w-[10rem] text-sm font-medium leading-[1.4] text-text-secondary">
-                Share progress
-              </span>
-            </button>
+        <section className="mt-20 px-3 sm:px-6">
+          <div className="max-w-lg">
+            <p className="section-kicker">Three ways to study</p>
+            <h2 className="mt-4 font-display text-5xl leading-[0.95] text-white sm:text-6xl">
+              Read. Listen. Remember.
+            </h2>
           </div>
-          <div aria-live="polite" className="mt-4 min-h-6 text-center">
-            {shareStatus ? (
-              <p className="text-sm text-accent">{shareStatus}</p>
-            ) : null}
+          <div className="mt-10 grid border-b border-white/10 sm:grid-cols-3">
+            {methods.map((method) => (
+              <Link
+                key={method.href}
+                href={method.href}
+                className="method-link flex flex-col justify-between p-6 sm:border-r sm:border-white/10 sm:last:border-r-0"
+              >
+                <span className="text-[10px] font-bold tracking-[0.22em] text-accent">
+                  {method.number}
+                </span>
+                <div className="relative z-10 mt-10">
+                  <h3 className="font-display text-4xl text-white">
+                    {method.title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-6 text-text-secondary">
+                    {method.description}
+                  </p>
+                  <p className="mt-5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.15em] text-accent-start">
+                    {method.action} <Arrow />
+                  </p>
+                </div>
+              </Link>
+            ))}
           </div>
         </section>
 
-        <section className="app-panel mt-5 rounded-[2rem] px-6 py-6">
+        <section className="mt-20 grid gap-8 border-y border-accent/15 px-5 py-10 sm:grid-cols-[1fr_auto] sm:items-center sm:px-8">
+          <div>
+            <p className="section-kicker">Begin by listening</p>
+            <h2 className="mt-3 font-display text-4xl text-white">
+              Let the Names settle in the heart.
+            </h2>
+            <p className="mt-3 max-w-lg text-sm leading-7 text-text-secondary">
+              Listen once without testing yourself. Then return to learn them one
+              by one.
+            </p>
+          </div>
+          <a
+            href={INSPIRATION_VIDEO_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="secondary-button whitespace-nowrap"
+          >
+            Watch the recitation <Arrow />
+          </a>
+        </section>
+
+        <div className="mt-12 flex flex-col gap-4 px-3 text-[11px] text-text-muted sm:flex-row sm:items-center sm:justify-between sm:px-6">
+          <p aria-live="polite" className="min-h-5 text-accent">
+            {shareStatus}
+          </p>
           <Link
             href="/changelog"
-            className="flex items-center justify-between gap-4 rounded-[1.5rem] border border-white/8 bg-white/[0.03] px-5 py-5 transition hover:border-accent/30 hover:bg-accent/5"
+            className="flex items-center gap-3 uppercase tracking-[0.14em] transition hover:text-accent"
           >
-            <div className="min-w-0">
-              <p className="section-kicker">Changelog</p>
-              <h2 className="mt-3 font-display text-2xl text-white sm:text-[2rem]">
-                Recent updates
-              </h2>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-text-secondary">
-                Names corrections, study-flow fixes, and the full update
-                history.
-              </p>
-            </div>
-
-            <div className="shrink-0 text-right">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-text-muted">
-                Latest
-              </p>
-              <p className="mt-2 text-sm font-medium text-accent">
-                {latestChange.date}
-              </p>
-              <p className="mt-2 hidden text-sm text-white sm:block">
-                Open
-              </p>
-            </div>
+            Updated {latestChange.date} <span aria-hidden="true">→</span>
           </Link>
-        </section>
+        </div>
 
         {milestone ? (
           <MilestoneModal

@@ -109,7 +109,7 @@ function BrowsePageContent() {
 
   return (
     <div className="px-5 pt-8 pb-10">
-      <section className="app-panel-strong rounded-[2rem] px-6 py-7">
+      <section className="app-panel-strong px-6 py-7 sm:px-8 sm:py-9">
         <p className="section-kicker">Browse The Collection</p>
         <h1 className="mt-4 font-display text-4xl text-white">
           {filterLabel}
@@ -136,7 +136,7 @@ function BrowsePageContent() {
 
         <label className="mt-8 block">
           <span className="sr-only">Search the 99 Names of Allah</span>
-          <div className="flex items-center gap-3 rounded-[1.4rem] border border-white/10 bg-black/20 px-4 py-4">
+          <div className="flex items-center gap-3 border-b border-accent/30 bg-black/15 px-4 py-4">
             <svg
               aria-hidden="true"
               viewBox="0 0 24 24"
@@ -168,8 +168,8 @@ function BrowsePageContent() {
                 href={value === "all" ? "/browse" : `/browse?status=${value}`}
                 className={
                   statusFilter === value
-                    ? "rounded-full border border-accent/25 bg-accent/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent"
-                    : "rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-text-muted transition hover:border-accent/25 hover:text-accent"
+                    ? "border-b border-accent bg-accent/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent"
+                    : "border-b border-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-text-muted transition hover:border-accent/40 hover:text-accent"
                 }
               >
                 {value === "all" ? "All" : value}
@@ -187,8 +187,8 @@ function BrowsePageContent() {
               aria-pressed={sortBy === value}
               className={
                 sortBy === value
-                  ? "rounded-full border border-accent/25 bg-accent/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent"
-                  : "rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-text-muted transition hover:border-accent/25 hover:text-accent"
+                  ? "border-b border-accent bg-accent/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent"
+                  : "border-b border-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-text-muted transition hover:border-accent/40 hover:text-accent"
               }
             >
               {value === "number"
@@ -211,13 +211,13 @@ function BrowsePageContent() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {filtered.map((name) => (
               <button
                 key={name.id}
                 type="button"
                 onClick={() => setSelectedName(name)}
-                className="app-panel rounded-[1.8rem] px-5 py-5 text-left transition hover:border-accent/30"
+                className="app-panel min-h-[16rem] px-5 py-5 text-left transition hover:border-accent/40 hover:bg-accent/[0.04]"
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
@@ -264,7 +264,7 @@ function BrowsePageContent() {
 function BrowsePageSkeleton() {
   return (
     <div className="px-5 pt-8 pb-10">
-      <section className="app-panel-strong rounded-[2rem] px-6 py-7">
+      <section className="app-panel-strong px-6 py-7 sm:px-8 sm:py-9">
         <p className="section-kicker">Browse The Collection</p>
         <div className="mt-4 h-12 w-56 animate-pulse rounded-2xl bg-white/8" />
         <div className="mt-3 h-16 max-w-2xl animate-pulse rounded-2xl bg-white/6" />

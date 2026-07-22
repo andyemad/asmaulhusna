@@ -36,7 +36,7 @@ export default function QuizOption({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className={`w-full rounded-[1.45rem] border px-5 py-5 transition ${
+      className={`w-full border px-5 py-5 text-left transition ${
         containerStyles[state]
       }`}
     >

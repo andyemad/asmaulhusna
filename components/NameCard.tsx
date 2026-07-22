@@ -9,9 +9,13 @@ interface NameCardProps {
 }
 
 const sizes = {
-  sm: { arabic: "text-xl", trans: "text-xs", meaning: "text-xs" },
-  md: { arabic: "text-3xl", trans: "text-sm", meaning: "text-sm" },
-  lg: { arabic: "text-5xl", trans: "text-base", meaning: "text-base" },
+  sm: { arabic: "text-2xl", trans: "text-[10px]", meaning: "text-xs" },
+  md: { arabic: "text-4xl", trans: "text-xs", meaning: "text-sm" },
+  lg: {
+    arabic: "text-6xl sm:text-7xl",
+    trans: "text-sm",
+    meaning: "text-base",
+  },
 };
 
 export default function NameCard({
@@ -23,21 +27,19 @@ export default function NameCard({
   const s = sizes[size];
   return (
     <div className={`text-center ${className}`}>
-      <ArabicText
-        className={`${s.arabic} leading-[1.45] text-white`}
-      >
+      <ArabicText className={`${s.arabic} glow-arabic leading-[1.45] text-white`}>
         {name.arabic}
       </ArabicText>
       <p
-        className={`${s.trans} mt-2 font-semibold uppercase tracking-[0.22em] text-accent`}
+        className={`${s.trans} mt-3 font-bold uppercase tracking-[0.25em] text-accent`}
       >
         {name.transliteration}
       </p>
-      {showMeaning && (
+      {showMeaning ? (
         <p className={`${s.meaning} mt-2 text-text-secondary`}>
           {name.meaning}
         </p>
-      )}
+      ) : null}
     </div>
   );
 }

@@ -110,7 +110,7 @@ export default function MilestoneModal({
           aria-modal="true"
           aria-labelledby="milestone-title"
           aria-describedby="milestone-description"
-          className="app-panel-strong w-full rounded-[2rem] px-6 py-8 text-center"
+          className="app-panel-strong w-full px-6 py-8 text-center"
         >
           <p className="section-kicker">Milestone Reached</p>
           <p className="mt-4 text-5xl">{milestone.emoji}</p>

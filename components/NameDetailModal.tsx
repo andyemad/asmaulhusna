@@ -193,7 +193,7 @@ export default function NameDetailModal({
             aria-modal="true"
             aria-labelledby={`name-detail-title-${name.id}`}
             aria-describedby={`name-detail-description-${name.id}`}
-            className="app-panel-strong relative w-full rounded-[2rem] px-6 py-7"
+            className="app-panel-strong relative w-full px-6 py-7"
             onClick={(event) => event.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-4">

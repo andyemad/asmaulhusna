@@ -9,8 +9,8 @@ import {
   copyShareLink,
 } from "@/lib/share";
 import { Name } from "@/lib/types";
-import NameCard from "./NameCard";
 import AudioButton from "./AudioButton";
+import NameCard from "./NameCard";
 import ShareSheet from "./ShareSheet";
 
 export default function NameOfTheDay() {
@@ -19,27 +19,21 @@ export default function NameOfTheDay() {
   const [sharing, setSharing] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    setName(getNameOfTheDay());
-  }, []);
+  useEffect(() => setName(getNameOfTheDay()), []);
 
   useEffect(() => {
     if (!statusMessage) return;
-
     const timeout = window.setTimeout(() => setStatusMessage(null), 2200);
     return () => window.clearTimeout(timeout);
   }, [statusMessage]);
 
   if (!name) {
     return (
-      <div className="app-panel rounded-[1.75rem] p-6">
-        <p className="section-kicker text-center">
-          Name of the Day
-        </p>
-        <div className="animate-pulse text-center">
-          <div className="mx-auto h-10 w-40 rounded-full bg-white/5" />
-          <div className="mx-auto mt-3 h-4 w-28 rounded-full bg-white/5" />
-          <div className="mx-auto mt-4 h-16 w-full rounded-2xl bg-white/5" />
+      <div className="app-panel min-h-[28rem] p-8">
+        <p className="section-kicker text-center">Name of the day</p>
+        <div className="animate-pulse pt-24 text-center">
+          <div className="mx-auto h-16 w-48 bg-white/5" />
+          <div className="mx-auto mt-4 h-4 w-28 bg-white/5" />
         </div>
       </div>
     );
@@ -56,9 +50,7 @@ export default function NameOfTheDay() {
 
   const handleShare = async () => {
     const fallbackText = `${shareText}\n\n${shareUrl}`;
-
     setSharing(true);
-
     try {
       if (navigator.share) {
         await navigator.share({
@@ -69,15 +61,11 @@ export default function NameOfTheDay() {
         setShareSheetOpen(false);
         return;
       }
-
       await navigator.clipboard.writeText(fallbackText);
       setStatusMessage("Share text copied.");
       setShareSheetOpen(false);
     } catch (error) {
-      if (error instanceof DOMException && error.name === "AbortError") {
-        return;
-      }
-
+      if (error instanceof DOMException && error.name === "AbortError") return;
       try {
         await navigator.clipboard.writeText(fallbackText);
         setStatusMessage("Share text copied.");
@@ -102,38 +90,48 @@ export default function NameOfTheDay() {
 
   return (
     <>
-      <div className="app-panel rounded-[1.75rem] p-6">
+      <section className="app-panel-strong px-6 py-8 sm:px-10 sm:py-11">
         <div className="flex items-center justify-between gap-4">
           <div>
-            <p className="section-kicker">Name of the Day</p>
-            <h2 className="mt-2 font-display text-3xl text-white">
-              Today&apos;s name
-            </h2>
+            <p className="section-kicker">Name of the day</p>
+            <p className="mt-2 text-xs text-text-muted">A moment for contemplation</p>
           </div>
           <button
             type="button"
             onClick={() => setShareSheetOpen(true)}
             aria-label={`Share today's name: ${name.transliteration}`}
-            className="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-text-secondary transition hover:border-accent/40 hover:text-accent"
+            className="border-b border-accent/35 pb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-text-secondary transition hover:border-accent hover:text-accent"
           >
             Share
           </button>
         </div>
-        <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-white/[0.03] p-5">
-          <NameCard name={name} size="md" className="mt-3" />
-          <p className="mt-4 text-center text-sm leading-relaxed text-text-secondary">
-            {name.description}
-          </p>
-          <div className="mt-5 flex justify-center">
-            <AudioButton src={name.audioFile} />
+
+        <div className="relative mx-auto my-10 max-w-lg py-8 text-center sm:my-14">
+          <span
+            aria-hidden="true"
+            className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full border border-accent/10 shadow-[0_0_80px_rgba(215,182,111,0.06)]"
+          />
+          <div className="relative z-10">
+            <NameCard name={name} size="lg" />
           </div>
+        </div>
+
+        <div className="ornament-rule text-[8px]">
+          <span>◆</span>
+        </div>
+
+        <p className="mx-auto mt-8 max-w-xl text-center font-display text-xl leading-8 text-text-secondary sm:text-2xl sm:leading-9">
+          {name.description}
+        </p>
+        <div className="mt-7 flex justify-center">
+          <AudioButton src={name.audioFile} />
         </div>
         <div aria-live="polite" className="mt-4 min-h-5 text-center">
           {statusMessage ? (
-            <p className="text-sm text-accent">{statusMessage}</p>
+            <p className="text-xs text-accent">{statusMessage}</p>
           ) : null}
         </div>
-      </div>
+      </section>
 
       <ShareSheet
         open={shareSheetOpen}

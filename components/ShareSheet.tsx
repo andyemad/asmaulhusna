@@ -90,7 +90,7 @@ export default function ShareSheet({
           aria-modal="true"
           aria-labelledby="share-sheet-title"
           aria-describedby="share-sheet-subtitle"
-          className="w-full rounded-[2rem] border border-white/10 bg-[rgba(8,11,18,0.96)] p-6 shadow-[0_30px_120px_rgba(0,0,0,0.45)]"
+          className="w-full border border-accent/25 bg-[rgba(4,13,18,0.97)] p-6 shadow-[0_30px_120px_rgba(0,0,0,0.5)]"
           onClick={(event) => event.stopPropagation()}
         >
           <div className="flex items-start justify-between gap-4">
@@ -127,7 +127,7 @@ export default function ShareSheet({
                   target="_blank"
                   rel="noreferrer"
                   onClick={onClose}
-                  className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4 text-left transition hover:border-accent/40 hover:bg-accent/5"
+                  className="border-l border-white/10 bg-white/[0.02] px-4 py-4 text-left transition hover:border-accent/50 hover:bg-accent/5"
                 >
                   <span className="block text-sm font-semibold text-white">
                     {action.label}
@@ -141,7 +141,7 @@ export default function ShareSheet({
                   key={action.label}
                   type="button"
                   onClick={action.onClick}
-                  className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4 text-left transition hover:border-accent/40 hover:bg-accent/5"
+                  className="border-l border-white/10 bg-white/[0.02] px-4 py-4 text-left transition hover:border-accent/50 hover:bg-accent/5"
                 >
                   <span className="block text-sm font-semibold text-white">
                     {action.label}
