@@ -40,25 +40,21 @@ export default function FlashCard({
       <button
         type="button"
         className="relative block w-full cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#050816]"
-        style={{ perspective: "2500px" }}
         onClick={() => setFlipped(!flipped)}
         aria-expanded={flipped}
         aria-describedby={instructionId}
       >
-        {/* easeInOutSine — sinusoidal acceleration, so there is no jerk at the
-            ends the way the default cubic-bezier has. With the longer duration
-            it cuts peak angular velocity roughly in half. */}
-        <div
-          className="relative min-h-[340px] w-full transition-transform duration-[900ms] ease-[cubic-bezier(0.37,0,0.63,1)] sm:min-h-[380px]"
-          style={{
-            transformStyle: "preserve-3d",
-            transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-          }}
-        >
+        {/* No 3D flip — the rotation was a motion-sickness trigger. The faces
+            cross-fade instead, the incoming one settling up a few pixels on a
+            long decelerating curve. The front face stays in-flow so the card's
+            height never changes mid-transition. */}
+        <div className="relative min-h-[340px] w-full sm:min-h-[380px]">
           {/* Front */}
           <div
-            className="app-panel-strong flex min-h-[340px] flex-col items-center justify-center p-8 text-center sm:min-h-[380px] sm:p-10"
-            style={{ backfaceVisibility: "hidden" }}
+            aria-hidden={flipped}
+            className={`app-panel-strong flex min-h-[340px] flex-col items-center justify-center p-8 text-center transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:min-h-[380px] sm:p-10 ${
+              flipped ? "pointer-events-none -translate-y-1.5 opacity-0" : "translate-y-0 opacity-100"
+            }`}
           >
             <span className="absolute right-5 top-5 border-b border-accent/35 px-1 py-1 text-sm font-semibold tracking-[0.22em] text-accent/80">
               {String(number).padStart(2, "0")}
@@ -77,11 +73,10 @@ export default function FlashCard({
 
           {/* Back */}
           <div
-            className="app-panel-strong absolute inset-0 flex h-full flex-col overflow-hidden p-8 text-center sm:p-10"
-            style={{
-              backfaceVisibility: "hidden",
-              transform: "rotateY(180deg)",
-            }}
+            aria-hidden={!flipped}
+            className={`app-panel-strong absolute inset-0 flex h-full flex-col overflow-hidden p-8 text-center transition-[opacity,transform] duration-[600ms] ease-[cubic-bezier(0.22,1,0.36,1)] sm:p-10 ${
+              flipped ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-1.5 opacity-0"
+            }`}
           >
             <span className="absolute right-5 top-5 border-b border-accent/35 px-1 py-1 text-sm font-semibold tracking-[0.22em] text-accent/80">
               {String(number).padStart(2, "0")}
