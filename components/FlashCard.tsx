@@ -40,13 +40,16 @@ export default function FlashCard({
       <button
         type="button"
         className="relative block w-full cursor-pointer text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-[#050816]"
-        style={{ perspective: "1000px" }}
+        style={{ perspective: "2500px" }}
         onClick={() => setFlipped(!flipped)}
         aria-expanded={flipped}
         aria-describedby={instructionId}
       >
+        {/* easeInOutSine — sinusoidal acceleration, so there is no jerk at the
+            ends the way the default cubic-bezier has. With the longer duration
+            it cuts peak angular velocity roughly in half. */}
         <div
-          className="relative min-h-[340px] w-full transition-transform duration-500 sm:min-h-[380px]"
+          className="relative min-h-[340px] w-full transition-transform duration-[900ms] ease-[cubic-bezier(0.37,0,0.63,1)] sm:min-h-[380px]"
           style={{
             transformStyle: "preserve-3d",
             transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
