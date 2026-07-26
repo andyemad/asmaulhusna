@@ -41,8 +41,8 @@ export default function NameDetailModal({
 
   const statusStyles = {
     new: "border-white/10 bg-white/[0.04] text-text-muted",
-    learning: "border-warning/20 bg-warning/10 text-warning",
-    memorized: "border-success/20 bg-success/10 text-success",
+    learning: "border-success/25 bg-success/10 text-success",
+    memorized: "border-accent/30 bg-accent/12 text-accent",
   };
 
   const statusLabels = {
@@ -259,7 +259,7 @@ export default function NameDetailModal({
                   type="button"
                   onClick={() => handleStatusUpdate("learning")}
                   disabled={saving}
-                  className="secondary-button w-full border-warning/20 bg-warning/10 text-warning"
+                  className="secondary-button w-full border-success/25 bg-success/10 text-success"
                 >
                   {saving ? "Updating..." : "Move Back To Learning"}
                 </button>

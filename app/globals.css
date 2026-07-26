@@ -25,7 +25,10 @@ html {
 
 body {
   min-height: 100vh;
-  overflow-x: hidden;
+  /* `clip` instead of `hidden`: it contains horizontal overflow without
+     turning the body into a scroll container, which would break the
+     sticky browse toolbar. */
+  overflow-x: clip;
   background:
     radial-gradient(circle at 50% -8%, rgba(120, 152, 180, 0.2), transparent 33rem),
     radial-gradient(circle at 15% 48%, rgba(31, 86, 86, 0.12), transparent 28rem),
@@ -340,6 +343,352 @@ body::after {
     0 0 80px rgba(215, 182, 111, 0.12);
 }
 
+/* ==========================================================================
+   Browse — The Illuminated Index
+   Status is expressed as light on the page: a Name you have memorized is
+   gilded, a Name you are learning glows sage, an untouched Name stays plain.
+   ========================================================================== */
+
+.browse-bar {
+  position: sticky;
+  z-index: 40;
+  top: 0;
+  margin: 0 -1.25rem;
+  padding: 1.15rem 1.25rem 0.85rem;
+  background: rgba(5, 15, 20, 0.96);
+  backdrop-filter: blur(18px);
+  transition: padding 240ms ease;
+}
+
+/* Fades the bar into the grid instead of ending on a hard edge. */
+.browse-bar::after {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  height: 1.4rem;
+  content: "";
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(5, 15, 20, 0.96), transparent);
+}
+
+.browse-bar[data-stuck="true"] {
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  box-shadow: 0 18px 40px -28px rgba(0, 0, 0, 0.9);
+}
+
+/* Collapses the masthead once the bar sticks, using the 1fr -> 0fr grid
+   transition so the height never has to be hard-coded. */
+.browse-bar-masthead {
+  display: grid;
+  grid-template-rows: 1fr;
+  margin-bottom: 0.85rem;
+  opacity: 1;
+  transition: grid-template-rows 260ms ease, opacity 200ms ease, margin 260ms ease;
+}
+
+.browse-bar-masthead > div {
+  overflow: hidden;
+}
+
+.browse-bar[data-stuck="true"] .browse-bar-masthead {
+  grid-template-rows: 0fr;
+  margin-bottom: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.folio-search {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  background: rgba(2, 10, 14, 0.72);
+  padding: 0.72rem 0.95rem;
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+}
+
+.folio-search:focus-within {
+  border-color: rgba(215, 182, 111, 0.55);
+  box-shadow: 0 0 0 3px rgba(215, 182, 111, 0.09);
+}
+
+/* The wrapper already shows focus, so the input must not draw its own ring. */
+.folio-search input:focus-visible {
+  outline: none;
+}
+
+.segment {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 0.4rem;
+  background: rgba(2, 10, 14, 0.55);
+}
+
+.segment > * + * {
+  border-left: 1px solid rgba(215, 182, 111, 0.12);
+}
+
+.segment-item {
+  position: relative;
+  padding: 0.55rem 0.8rem;
+  color: var(--muted);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: color 180ms ease, background 180ms ease;
+}
+
+.segment-item:hover {
+  color: var(--paper);
+}
+
+.segment-item[data-active="true"] {
+  background: rgba(215, 182, 111, 0.13);
+  color: var(--gold-bright);
+}
+
+.segment-item[data-active="true"]::before {
+  position: absolute;
+  top: 0;
+  right: 0.55rem;
+  left: 0.55rem;
+  height: 1px;
+  content: "";
+  background: var(--gold);
+  box-shadow: 0 0 10px rgba(215, 182, 111, 0.7);
+}
+
+.illumination-meter {
+  display: flex;
+  overflow: hidden;
+  height: 2px;
+  border-radius: 2px;
+  background: rgba(244, 237, 220, 0.07);
+}
+
+.illumination-meter span {
+  height: 100%;
+  transition: width 620ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* --- Folio view: calligraphy-first tiles ------------------------------- */
+
+.folio-tile {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  overflow: hidden;
+  flex-direction: column;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: linear-gradient(158deg, rgba(16, 39, 46, 0.7), rgba(4, 13, 18, 0.9));
+  padding: 1.2rem 1.15rem 1.05rem;
+  transition: transform 280ms cubic-bezier(0.22, 1, 0.36, 1), border-color 280ms ease,
+    box-shadow 280ms ease;
+}
+
+.folio-tile::before {
+  position: absolute;
+  inset: 0.45rem;
+  border: 1px solid rgba(215, 182, 111, 0.09);
+  border-radius: 0.7rem;
+  content: "";
+  pointer-events: none;
+  transition: border-color 280ms ease;
+}
+
+.folio-tile::after {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  content: "";
+  opacity: 0;
+  background: radial-gradient(circle at 50% 8%, rgba(215, 182, 111, 0.2), transparent 62%);
+  transition: opacity 420ms ease;
+}
+
+.folio-tile:hover {
+  transform: translateY(-3px);
+  border-color: rgba(215, 182, 111, 0.45);
+  box-shadow: 0 26px 62px rgba(0, 0, 0, 0.42);
+}
+
+.folio-tile:hover::after {
+  opacity: 0.6;
+}
+
+.folio-tile[data-status="memorized"] {
+  border-color: rgba(215, 182, 111, 0.42);
+}
+
+.folio-tile[data-status="memorized"]::before {
+  border-color: rgba(215, 182, 111, 0.26);
+}
+
+.folio-tile[data-status="memorized"]::after {
+  opacity: 1;
+}
+
+.folio-tile[data-status="learning"] {
+  border-color: rgba(126, 163, 142, 0.34);
+}
+
+.folio-tile[data-status="learning"]::after {
+  opacity: 0.95;
+  background: radial-gradient(circle at 50% 8%, rgba(126, 163, 142, 0.17), transparent 62%);
+}
+
+.folio-numeral {
+  color: rgba(215, 182, 111, 0.55);
+  font-family: var(--font-arabic), serif;
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+/* Stretched hit area: the whole tile is clickable, but nested controls
+   (the listen button) stay above it and keep their own click target. */
+.folio-stretch::after {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: "";
+}
+
+.folio-above {
+  position: relative;
+  z-index: 1;
+}
+
+/* The focus ring belongs on the whole tile, not on the small text target. */
+.folio-stretch:focus-visible {
+  outline: none;
+}
+
+.folio-tile:has(.folio-stretch:focus-visible),
+.index-row:has(.folio-stretch:focus-visible) {
+  border-color: var(--gold-bright);
+  box-shadow: 0 0 0 2px rgba(240, 217, 156, 0.45);
+}
+
+.folio-listen {
+  display: grid;
+  height: 2.15rem;
+  width: 2.15rem;
+  place-items: center;
+  border: 1px solid rgba(215, 182, 111, 0.24);
+  border-radius: 50%;
+  color: var(--gold);
+  transition: background 200ms ease, border-color 200ms ease, color 200ms ease,
+    transform 200ms ease;
+}
+
+.folio-listen:hover {
+  transform: scale(1.06);
+  border-color: var(--gold);
+  background: rgba(215, 182, 111, 0.14);
+  color: var(--gold-bright);
+}
+
+.folio-listen[data-playing="true"] {
+  border-color: var(--gold);
+  background: rgba(215, 182, 111, 0.2);
+  color: var(--gold-bright);
+}
+
+.folio-listen[data-unavailable="true"] {
+  border-color: rgba(239, 143, 130, 0.35);
+  color: var(--error, #ef8f82);
+}
+
+/* --- Index view: dense scannable rows ---------------------------------- */
+
+.index-row {
+  position: relative;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 0.9rem;
+  border-bottom: 1px solid rgba(215, 182, 111, 0.1);
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+  transition: background 200ms ease, padding-left 200ms ease;
+}
+
+.index-row:hover {
+  background: linear-gradient(90deg, rgba(215, 182, 111, 0.09), transparent 72%);
+  padding-left: 1.05rem;
+}
+
+.index-row[data-status="memorized"] {
+  box-shadow: inset 2px 0 0 var(--gold);
+}
+
+.index-row[data-status="learning"] {
+  box-shadow: inset 2px 0 0 var(--sage);
+}
+
+/* --- Mosaic view: all 99 at once --------------------------------------- */
+
+.mosaic-cell {
+  position: relative;
+  display: grid;
+  aspect-ratio: 1;
+  align-content: center;
+  justify-items: center;
+  gap: 0.2rem;
+  border: 1px solid rgba(215, 182, 111, 0.14);
+  border-radius: 0.55rem;
+  background: rgba(6, 18, 24, 0.6);
+  padding: 0.3rem;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1), background 220ms ease,
+    border-color 220ms ease;
+}
+
+.mosaic-cell:hover {
+  z-index: 2;
+  transform: scale(1.09);
+  border-color: rgba(215, 182, 111, 0.55);
+  background: rgba(215, 182, 111, 0.12);
+}
+
+.mosaic-cell[data-status="memorized"] {
+  border-color: rgba(215, 182, 111, 0.5);
+  background: radial-gradient(circle at 50% 38%, rgba(215, 182, 111, 0.22), rgba(6, 18, 24, 0.72));
+}
+
+.mosaic-cell[data-status="learning"] {
+  border-color: rgba(126, 163, 142, 0.42);
+  background: radial-gradient(circle at 50% 38%, rgba(126, 163, 142, 0.15), rgba(6, 18, 24, 0.72));
+}
+
+.folio-mark {
+  border-radius: 0.15rem;
+  background: rgba(215, 182, 111, 0.24);
+  color: var(--gold-bright);
+  padding: 0 0.12em;
+}
+
+.folio-reveal {
+  animation: folio-rise 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes folio-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 ::selection {
   background: rgba(215, 182, 111, 0.28);
   color: #ffffff;
@@ -383,6 +732,16 @@ body::after {
   50% {
     opacity: 1;
     transform: translateX(-50%) scale(1.03);
+  }
+}
+
+/* Tightens the segmented controls so sort and layout share one row on a
+   phone rather than stacking into three. */
+@media (max-width: 480px) {
+  .segment-item {
+    padding: 0.5rem 0.5rem;
+    font-size: 0.54rem;
+    letter-spacing: 0.12em;
   }
 }
 

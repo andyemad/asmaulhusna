@@ -1,10 +1,20 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import ArabicText from "@/components/ArabicText";
 import NameDetailModal from "@/components/NameDetailModal";
+import BrowseToolbar, {
+  SortBy,
+  StatusFilter,
+  ViewMode,
+} from "@/components/browse/BrowseToolbar";
+import {
+  FolioTile,
+  IndexRow,
+  MosaicCell,
+  NameCellProps,
+  NameStatus,
+} from "@/components/browse/NameCells";
 import { searchNames } from "@/lib/names";
 import {
   getLearningCount,
@@ -14,8 +24,20 @@ import {
 } from "@/lib/progress";
 import { Name, UserProgress } from "@/lib/types";
 
-type SortBy = "number" | "status" | "alpha";
-type StatusFilter = "all" | "memorized" | "learning" | "new";
+const VIEW_STORAGE_KEY = "asma-ul-husna-browse-view";
+const SUGGESTIONS = ["Mercy", "Light", "Peace", "Forgiving", "40"];
+
+const VIEW_LAYOUT: Record<
+  ViewMode,
+  { className: string; Cell: (props: NameCellProps) => JSX.Element }
+> = {
+  folio: { className: "grid gap-3 sm:grid-cols-2", Cell: FolioTile },
+  index: { className: "app-panel overflow-hidden", Cell: IndexRow },
+  mosaic: {
+    className: "grid grid-cols-4 gap-2 sm:grid-cols-6 md:grid-cols-8",
+    Cell: MosaicCell,
+  },
+};
 
 export default function BrowsePage() {
   return (
@@ -30,18 +52,43 @@ function BrowsePageContent() {
   const [progress, setProgress] = useState<UserProgress | null>(null);
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortBy>("number");
+  const [view, setView] = useState<ViewMode>("folio");
   const [selectedName, setSelectedName] = useState<Name | null>(null);
-
-  const statusFilter = useMemo<StatusFilter>(() => {
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>(() => {
     const raw = searchParams.get("status");
-    return raw === "memorized" || raw === "learning" || raw === "new"
-      ? raw
-      : "all";
-  }, [searchParams]);
+    return raw === "memorized" || raw === "learning" || raw === "new" ? raw : "all";
+  });
 
   useEffect(() => {
     setProgress(loadProgress());
+
+    const storedView = localStorage.getItem(VIEW_STORAGE_KEY);
+    if (storedView === "folio" || storedView === "index" || storedView === "mosaic") {
+      setView(storedView);
+    }
   }, []);
+
+  const handleViewChange = useCallback((next: ViewMode) => {
+    setView(next);
+    localStorage.setItem(VIEW_STORAGE_KEY, next);
+  }, []);
+
+  // Keeps ?status= shareable without paying for a route transition on a
+  // filter that is already resolved on the client.
+  const handleStatusFilterChange = useCallback((next: StatusFilter) => {
+    setStatusFilter(next);
+    window.history.replaceState(
+      null,
+      "",
+      next === "all" ? "/browse" : `/browse?status=${next}`
+    );
+  }, []);
+
+  const getStatus = useCallback(
+    (nameId: number): NameStatus =>
+      progress ? getNameProgress(progress, nameId).status : "new",
+    [progress]
+  );
 
   const filtered = useMemo(() => {
     let result = searchNames(query);
@@ -70,180 +117,46 @@ function BrowsePageContent() {
 
   const memorizedCount = progress ? getMemorizedCount(progress) : 0;
   const learningCount = progress ? getLearningCount(progress) : 0;
-  const getStatus = (nameId: number) =>
-    progress ? getNameProgress(progress, nameId).status : "new";
-  const filterLabel =
-    statusFilter === "memorized"
-      ? "Memorized Names"
-      : statusFilter === "learning"
-        ? "Learning Names"
-        : statusFilter === "new"
-          ? "New Names"
-          : "Explore All 99 Names";
 
-  const statusBadge = (nameId: number) => {
-    const status = getStatus(nameId);
+  const cells = filtered.map((name, index) => ({
+    name,
+    status: getStatus(name.id),
+    query,
+    index,
+    onOpen: () => setSelectedName(name),
+  }));
 
-    if (status === "memorized") {
-      return (
-        <span className="rounded-full border border-success/20 bg-success/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-success">
-          Memorized
-        </span>
-      );
-    }
-
-    if (status === "learning") {
-      return (
-        <span className="rounded-full border border-warning/20 bg-warning/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-warning">
-          Learning
-        </span>
-      );
-    }
-
-    return (
-      <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-text-muted">
-        New
-      </span>
-    );
-  };
+  const { className: layoutClassName, Cell } = VIEW_LAYOUT[view];
 
   return (
-    <div className="px-5 pt-8 pb-10">
-      <section className="app-panel-strong px-6 py-7 sm:px-8 sm:py-9">
-        <p className="section-kicker">Browse The Collection</p>
-        <h1 className="mt-4 font-display text-4xl text-white">
-          {filterLabel}
-        </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-text-secondary">
-          Search by Arabic, transliteration, meaning, description, or number,
-          then open any name for the full explanation and pronunciation.
-        </p>
+    <div className="px-5 pb-12">
+      <BrowseToolbar
+        query={query}
+        onQueryChange={setQuery}
+        statusFilter={statusFilter}
+        onStatusFilterChange={handleStatusFilterChange}
+        sortBy={sortBy}
+        onSortByChange={setSortBy}
+        view={view}
+        onViewChange={handleViewChange}
+        resultCount={filtered.length}
+        memorizedCount={memorizedCount}
+        learningCount={learningCount}
+      />
 
-        <div className="mt-8 grid grid-cols-3 gap-3">
-          <div className="stat-card">
-            <span className="stat-value">{filtered.length}</span>
-            <span className="stat-label">Results</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-value">{memorizedCount}</span>
-            <span className="stat-label">Memorized</span>
-          </div>
-          <div className="stat-card">
-            <span className="stat-value">{learningCount}</span>
-            <span className="stat-label">Learning</span>
-          </div>
-        </div>
-
-        <label className="mt-8 block">
-          <span className="sr-only">Search the 99 Names of Allah</span>
-          <div className="flex items-center gap-3 border-b border-accent/30 bg-black/15 px-4 py-4">
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 24 24"
-              className="h-5 w-5 text-text-muted"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <circle cx="11" cy="11" r="7" />
-              <path d="m20 20-3.5-3.5" />
-            </svg>
-            <input
-              type="text"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              placeholder="Search by Arabic, transliteration, meaning, description, or number"
-              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-text-muted"
-            />
-          </div>
-        </label>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {(["all", "memorized", "learning", "new"] as StatusFilter[]).map(
-            (value) => (
-              <Link
-                key={value}
-                href={value === "all" ? "/browse" : `/browse?status=${value}`}
-                className={
-                  statusFilter === value
-                    ? "border-b border-accent bg-accent/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent"
-                    : "border-b border-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-text-muted transition hover:border-accent/40 hover:text-accent"
-                }
-              >
-                {value === "all" ? "All" : value}
-              </Link>
-            )
-          )}
-        </div>
-
-        <div className="mt-3 flex flex-wrap gap-2">
-          {(["number", "status", "alpha"] as SortBy[]).map((value) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setSortBy(value)}
-              aria-pressed={sortBy === value}
-              className={
-                sortBy === value
-                  ? "border-b border-accent bg-accent/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-accent"
-                  : "border-b border-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.22em] text-text-muted transition hover:border-accent/40 hover:text-accent"
-              }
-            >
-              {value === "number"
-                ? "By Number"
-                : value === "status"
-                  ? "By Status"
-                  : "A to Z"}
-            </button>
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-5">
+      <section className="mt-4">
         {filtered.length === 0 ? (
-          <div className="app-panel rounded-[2rem] px-6 py-10 text-center">
-            <p className="font-display text-3xl text-white">No matches found</p>
-            <p className="mt-3 text-sm leading-relaxed text-text-secondary">
-              Try a different transliteration, a meaning keyword, or the name
-              number.
-            </p>
-          </div>
+          <EmptyState query={query} onSuggestion={setQuery} />
         ) : (
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {filtered.map((name) => (
-              <button
-                key={name.id}
-                type="button"
-                onClick={() => setSelectedName(name)}
-                className="app-panel min-h-[16rem] px-5 py-5 text-left transition hover:border-accent/40 hover:bg-accent/[0.04]"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div>
-                    <p className="section-kicker">
-                      Name {String(name.id).padStart(2, "0")}
-                    </p>
-                    <p className="mt-2 text-sm text-text-secondary">
-                      {name.meaning}
-                    </p>
-                  </div>
-                  {statusBadge(name.id)}
-                </div>
-
-                <div className="mt-5 text-center">
-                  <ArabicText className="text-4xl leading-[1.55] text-white">
-                    {name.arabic}
-                  </ArabicText>
-                  <p className="mt-3 text-sm font-semibold uppercase tracking-[0.22em] text-accent">
-                    {name.transliteration}
-                  </p>
-                </div>
-
-                <p className="mt-5 line-clamp-2 text-sm leading-relaxed text-text-secondary">
-                  {name.description}
-                </p>
-              </button>
+          // Keying on view and ordering remounts the grid, which replays the
+          // staggered reveal whenever the collection is re-cut. Deliberately
+          // excludes `query` so the tiles do not flash on every keystroke.
+          <div
+            key={`${view}-${statusFilter}-${sortBy}`}
+            className={layoutClassName}
+          >
+            {cells.map((cell) => (
+              <Cell key={cell.name.id} {...cell} />
             ))}
           </div>
         )}
@@ -261,49 +174,65 @@ function BrowsePageContent() {
   );
 }
 
+function EmptyState({
+  query,
+  onSuggestion,
+}: {
+  query: string;
+  onSuggestion: (value: string) => void;
+}) {
+  return (
+    <div className="app-panel px-6 py-12 text-center">
+      <p className="font-display text-3xl text-white">
+        Nothing matches &ldquo;{query}&rdquo;
+      </p>
+      <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-text-secondary">
+        Search runs across the Arabic, the transliteration, the meaning, the full
+        description, and the Name&rsquo;s number.
+      </p>
+      <div className="mt-7 flex flex-wrap items-center justify-center gap-2">
+        {SUGGESTIONS.map((suggestion) => (
+          <button
+            key={suggestion}
+            type="button"
+            onClick={() => onSuggestion(suggestion)}
+            className="border border-accent/25 px-3.5 py-2 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-accent transition-colors hover:border-accent hover:bg-accent/10"
+          >
+            {suggestion}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function BrowsePageSkeleton() {
   return (
-    <div className="px-5 pt-8 pb-10">
-      <section className="app-panel-strong px-6 py-7 sm:px-8 sm:py-9">
-        <p className="section-kicker">Browse The Collection</p>
-        <div className="mt-4 h-12 w-56 animate-pulse rounded-2xl bg-white/8" />
-        <div className="mt-3 h-16 max-w-2xl animate-pulse rounded-2xl bg-white/6" />
-
-        <div className="mt-8 grid grid-cols-3 gap-3">
+    <div className="px-5 pb-12">
+      <div className="browse-bar">
+        <div className="browse-bar-masthead">
+          <div>
+            <p className="section-kicker">Asma ul Husna</p>
+            <div className="mt-2 h-9 w-64 animate-pulse rounded bg-white/[0.06]" />
+          </div>
+        </div>
+        <div className="h-[3.05rem] animate-pulse rounded-[0.4rem] bg-black/25" />
+        <div className="mt-2.5 flex gap-2">
           {[0, 1, 2].map((value) => (
             <div
               key={value}
-              className="stat-card min-h-[104px] animate-pulse bg-white/[0.04]"
+              className="h-[2.1rem] w-32 animate-pulse rounded-[0.4rem] bg-white/[0.04]"
             />
           ))}
         </div>
+        <div className="illumination-meter mt-3" />
+      </div>
 
-        <div className="mt-8 h-14 animate-pulse rounded-[1.4rem] bg-black/20" />
-
-        <div className="mt-4 flex gap-2">
-          {[0, 1, 2, 3].map((value) => (
-            <div
-              key={value}
-              className="h-10 w-20 animate-pulse rounded-full bg-white/[0.05]"
-            />
-          ))}
-        </div>
-
-        <div className="mt-3 flex gap-2">
-          {[0, 1, 2].map((value) => (
-            <div
-              key={value}
-              className="h-10 w-24 animate-pulse rounded-full bg-white/[0.05]"
-            />
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-5 grid gap-3">
-        {[0, 1, 2].map((value) => (
+      <section className="mt-4 grid gap-3 sm:grid-cols-2">
+        {[0, 1, 2, 3].map((value) => (
           <div
             key={value}
-            className="app-panel min-h-[220px] animate-pulse rounded-[1.8rem] bg-white/[0.03]"
+            className="h-[19rem] animate-pulse rounded-[1rem] border border-[rgba(215,182,111,0.12)] bg-white/[0.03]"
           />
         ))}
       </section>

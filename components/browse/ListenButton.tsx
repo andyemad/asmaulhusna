@@ -2,41 +2,37 @@
 
 import { useAudioStatus } from "@/lib/use-audio-status";
 
-interface AudioButtonProps {
+interface ListenButtonProps {
   src: string;
-  className?: string;
+  name: string;
 }
 
-export default function AudioButton({ src, className = "" }: AudioButtonProps) {
+/**
+ * Icon-only pronunciation control for browse cells — hearing a Name should
+ * not require opening its detail view.
+ */
+export default function ListenButton({ src, name }: ListenButtonProps) {
   const { status, toggle } = useAudioStatus(src);
-
   const isUnavailable = status === "error";
-  const label = isUnavailable
-    ? "Audio unavailable"
-    : status === "playing"
-      ? "Playing"
-      : "Listen";
 
   return (
     <button
       type="button"
       onClick={toggle}
+      data-playing={status === "playing"}
+      data-unavailable={isUnavailable}
       aria-label={
         isUnavailable
-          ? "Audio unavailable"
+          ? `Audio unavailable for ${name}`
           : status === "playing"
-            ? "Playing, pause audio"
-            : "Listen, play audio"
+            ? `Pause ${name}`
+            : `Hear ${name} pronounced`
       }
-      className={`inline-flex min-h-10 items-center gap-2.5 border-b px-1 py-2 text-[10px] font-bold uppercase tracking-[0.18em] transition-colors ${
-        isUnavailable
-          ? "border-error/40 text-error"
-          : "border-accent/40 text-accent hover:border-accent hover:text-accent-start"
-      } ${className}`}
+      className="folio-listen folio-above shrink-0"
     >
       <svg
         viewBox="0 0 24 24"
-        className="h-4 w-4"
+        className="h-[17px] w-[17px]"
         fill="none"
         stroke="currentColor"
         strokeLinecap="round"
@@ -50,10 +46,7 @@ export default function AudioButton({ src, className = "" }: AudioButtonProps) {
             <path d="M12 7.5v5.5M12 16.5h.01" />
           </>
         ) : status === "playing" ? (
-          <>
-            <path d="M9.5 8v8M14.5 8v8" />
-            <circle cx="12" cy="12" r="9" opacity=".35" />
-          </>
+          <path d="M9.5 8v8M14.5 8v8" />
         ) : (
           <>
             <path d="M10 9v6l5 3V6z" />
@@ -61,7 +54,6 @@ export default function AudioButton({ src, className = "" }: AudioButtonProps) {
           </>
         )}
       </svg>
-      {label}
     </button>
   );
 }
