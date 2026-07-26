@@ -15,7 +15,7 @@ import {
   NameCellProps,
   NameStatus,
 } from "@/components/browse/NameCells";
-import { searchNames } from "@/lib/names";
+import { alphabeticalNameKey, searchNames } from "@/lib/names";
 import {
   getLearningCount,
   getMemorizedCount,
@@ -100,9 +100,12 @@ function BrowsePageContent() {
     }
 
     if (sortBy === "alpha") {
-      result = [...result].sort((a, b) =>
-        a.transliteration.localeCompare(b.transliteration)
-      );
+      result = [...result].sort((a, b) => {
+        const byName = alphabeticalNameKey(a.transliteration).localeCompare(
+          alphabeticalNameKey(b.transliteration)
+        );
+        return byName || a.transliteration.localeCompare(b.transliteration);
+      });
     } else if (sortBy === "status" && progress) {
       const order = { memorized: 0, learning: 1, new: 2 };
       result = [...result].sort(

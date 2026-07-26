@@ -4,6 +4,18 @@ import { getLocalDayOfYear } from "./date";
 
 export const names: Name[] = namesData as Name[];
 
+/**
+ * Sort by the substantive name rather than the displayed Arabic definite
+ * article (Al-, Ar-, As-, etc.). The article stays visible in the UI.
+ */
+export function alphabeticalNameKey(transliteration: string): string {
+  return transliteration
+    .replace(/^(?:al|ar|as|ash|an|az|at|ad)-/i, "")
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLocaleLowerCase();
+}
+
 export function getNameById(id: number): Name | undefined {
   return names.find((n) => n.id === id);
 }
